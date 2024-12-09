@@ -1,0 +1,70 @@
+/* item-container内部 */
+
+.list-container {
+    height:100%;
+    width:20%;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+  }
+  
+  .vis-container {
+      height:100%;
+      width: 50%;
+      background-color: rgb(220, 243, 197);
+      padding-left: 15px;
+      padding-right: 15px;
+      box-sizing: border-box;
+  }
+  
+  .info-book-container {
+    height: 100%;
+    width: 30%;
+  
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+  }
+    
+  /* info-book-container内部 */
+  .info-container {
+    height: 40%;
+    width: 100%;
+  
+    background-color:bisque;
+  
+  }
+  
+  .book-container {
+    height: 60%;
+    width: 100%;
+  
+    background-color: rgb(245, 245, 195);
+  }
+  
+  
+  /* レスポンシブ設定 */
+  @media (max-width: 768px) {
+    /* メインコンテナを縦に並べる */
+    .main-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .vis-container, .book-container {
+      width: 100%;
+      height: 50%; /* 画面の高さに合わせて高さを調整 */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    /* セレクトボタンのテキストを小さくする */
+    h1 {
+      font-size: 1rem;
+    }
+  
+    /* ビジュアライゼーションエリアの高さを調整 */
+    .vis-container, .book-container {
+      height: 40%; /* より小さな画面で高さを調整 */
+    }
+  }

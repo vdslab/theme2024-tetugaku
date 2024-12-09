@@ -1,0 +1,27 @@
+/* main内部 */
+.full-container {
+    height:100%;
+    width: 100%;
+  
+    padding-bottom: 1%;
+    box-sizing: border-box;
+    
+    /* 現状不要 */
+    /* overflow: hidden; */
+  }
+  
+  .select-container {
+    height:10%;
+    width: 100%;
+  
+    text-align: center;
+    background-color: rgb(230, 213, 247);
+  }
+  
+  .item-container {
+    height:90%;
+    width: 100%;
+  
+    display: flex;
+    flex-direction:raw;
+  }
