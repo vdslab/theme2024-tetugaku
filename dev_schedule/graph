@@ -14,4 +14,40 @@ svgの描画範囲を決める(とりあえず親要素)
 
 インタラクションは別途考える
 
+12/14
+## d3でネットワーク図を描画する際に覚えておきたいこと
 
+d3.select でsvg要素を選択
+svg.attr("width(or height)")でsvg属性のw or h属性を取得
+
+scaleOrdinalでcolorスケールを設定(グループを渡すと、グループに応じた色が返される)
+
+# simulationについて
+.force("link", d3.forceLink().id(function(d) { return d.id; }))
+：リンク(辺)に関する力を設定します。このときidをd.idで指定することで、
+リンクのソース・ターゲット参照がノードのidと紐づくようになります。
+
+.force("charge") 電荷の力設定
+
+.force("center") グラフの重心を寄せる場所を指定(svgの中心ならw/2,h/2)
+
+d3.json("miserables.json", function(error, graph) {
+  if (error) throw error;
+
+この関数で、jsonを読み込める
+
+g要素とは？
+line要素とか2回追加する意味が分からん
+
+<title>はツールチップを表示
+
+
+
+##設計
+まずsvgの大きさから決める(svgに枠線をつけて、描画範囲を見える化)
+大きさは、とりあえず親要素(vis-div)に合わせることとする。
+大きさ合わせ done
+
+グラフを描画　とりあえずレミゼラブルvisをdemo的に作成
+
+データをjsonから取得するコンポーネントを作成(FetchData.jsx)
