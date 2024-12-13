@@ -1,0 +1,64 @@
+npm init -y
+npm install --save-dev vite @vitejs/plugin-react
+npm install react react-dom
+npm install bulma
+npm install d3
+
+testのところを
+
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+
+に変更
+
+/*もう使わない
+<head>//index.htmlのheadの下にコピペ
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+*/
+  
+----------------------------------------------------------------------------------------------------------
+: index.html 
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React Tutorial</title>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+----------------------------------------------------------------------------------------------------------
+: vite.config.js 
+
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+});
+----------------------------------------------------------------------------------------------------------
+: src/App.jsx
+
+function App() {
+  return (
+    <div>
+      <h1>Hello, World!</h1>
+    </div>
+  );
+}
+
+export default App;
+----------------------------------------------------------------------------------------------------------
+: src/main.jsx
+
+import { createRoot } from "react-dom/client";
+import App from "./App";
+
+createRoot(document.querySelector("#content")).render(<App />);
+----------------------------------------------------------------------------------------------------------
+: .gitignore
+
+https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
