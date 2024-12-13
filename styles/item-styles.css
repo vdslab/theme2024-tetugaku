@@ -7,6 +7,26 @@
     padding-right: 15px;
     box-sizing: border-box;
   }
+
+  .info-list-container {
+    height:100%;
+    width:20%;
+
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .info-container {
+    height:40%;
+    width:100%;
+    background-color: rgba(175, 209, 209, 0.548);
+  }
+
+  .list-container {
+    height:60%;
+    width:100%;
+    background-color: rgb(253, 239, 199);
+  }
   
   .vis-container {
       height:100%;
@@ -17,31 +37,16 @@
       box-sizing: border-box;
   }
   
-  .info-book-container {
+  .book-container {
     height: 100%;
     width: 30%;
   
     padding-left: 15px;
     padding-right: 15px;
     box-sizing: border-box;
+    background-color: rgb(253, 239, 199);
+    background-clip: content-box; /* 背景色をcontent部分のみに限定 */
   }
-    
-  /* info-book-container内部 */
-  .info-container {
-    height: 40%;
-    width: 100%;
-  
-    background-color:bisque;
-  
-  }
-  
-  .book-container {
-    height: 60%;
-    width: 100%;
-  
-    background-color: rgb(245, 245, 195);
-  }
-  
   
   /* レスポンシブ設定 */
   @media (max-width: 768px) {
