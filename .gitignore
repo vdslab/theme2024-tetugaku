@@ -128,3 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# apiKey
+apiKey.py
+
+#py
+__pycache__
+
+.venv
