@@ -131,6 +131,7 @@ dist
 
 # apiKey
 apiKey.py
+create_json.py
 
 #py
 __pycache__
