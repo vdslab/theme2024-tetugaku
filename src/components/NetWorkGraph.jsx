@@ -53,6 +53,11 @@ function NetworkGraph() {
                 .enter().append("circle")
                 .attr("r",7)
                 .attr("fill",function(d){ return color(d.group);})
+                .on("click", (e,d) => {
+                    // 第一引数はポインタイベント
+                    // 第二引数がデータオブジェクト
+                    onNodeClick(d.id)
+                })
 
             const simulation = d3.forceSimulation(data.nodes)
             .force("link", d3.forceLink(data.links).id(function(d) { return d.id; }))
@@ -76,8 +81,6 @@ function NetworkGraph() {
         }
     
     },[data])
-
-        
 
     return (
         <svg className="network-graph" >
