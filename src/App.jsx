@@ -1,6 +1,13 @@
+import { useState } from 'react';
 import NetworkGraph from "./components/NetWorkGraph";
 
 function App() {
+  const [clickedNodeId, setClickedNodeId] = useState(null);
+  // ノードクリックを感知して、idをclickedNodeIdにセット
+  const handleNodeClick = (newNodeId) => {
+    setClickedNodeId(newNodeId);
+  };
+
     return (
       <div className="wrapper">
         {/* wrapper-styles.css適用箇所 */}
