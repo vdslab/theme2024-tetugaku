@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import NetworkGraph from "./components/NetWorkGraph";
+import Information from "./components/Information"
+import processed_data from "/create_json/output_data/processed_data";
 
 function App() {
   const [clickedNodeId, setClickedNodeId] = useState(null);
@@ -23,13 +25,14 @@ function App() {
               <div className="info-list-container">
                 <div className="info-container">
                 <h1>思想家の詳細</h1>
+              <Information processed_data={processed_data} nodeId={clickedNodeId}/>
                 </div>
                 <div className="list-container">
                 <h1>リストの表示</h1>
                 </div>
               </div>
               <div className="vis-container">
-                <NetworkGraph/>
+              <NetworkGraph processed_data={processed_data} onNodeClick={handleNodeClick}/>
               </div>
               <div className="book-container">
               <h1>本棚</h1>
