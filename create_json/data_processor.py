@@ -51,8 +51,8 @@ def process_json(data,file):
 
         # nodesの作成
         result["nodes"].append({
-            "name_id": name_id,
-            "group_id": group_id,
+            "id": name_id,
+            "group": group_id,
             "group_name": row_dict["group_name"],
             "information": row_dict["information"]
         })
@@ -60,8 +60,8 @@ def process_json(data,file):
         # linksの作成
         result["links"].extend([
             {
-                "name_id" : name_id,
-                "target_id" : fixed_targets_ids[i],
+                "source" : name_id,
+                "target" : fixed_targets_ids[i],
                 "relation_id" : relations[i]
             }
             for i in range(len(fixed_targets_ids))
