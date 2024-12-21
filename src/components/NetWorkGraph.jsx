@@ -1,24 +1,12 @@
-import FetchData from "./FetchData";
 import { useEffect,useState } from "react";
 import * as d3 from 'd3';
 
 
-function NetworkGraph() {
+function NetworkGraph({processed_data,onNodeClick}) {
     const [data,setData] = useState(null);
 
-    // FetchDataを呼び出して、その返り値(Promise)を処理する
     useEffect(() => {
-        FetchData()
-          .then(data => {
-            console.log("get data");
-            setData(data);
-          })
-          .catch(err => {
-            console.error("not get error:", err);
-          });
-    },[]);
-
-    useEffect(() => {
+        setData(processed_data);
         // dataが入っているときに、描画を行う
 
         if(!data)console.log("dont have data")
