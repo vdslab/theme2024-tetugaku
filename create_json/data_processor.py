@@ -46,9 +46,6 @@ def process_json(data,file):
             "name": row_dict["name"]
         })
     
-
-
-
         # nodesの作成
         result["nodes"].append({
             "id": name_id,
