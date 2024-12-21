@@ -130,10 +130,12 @@ dist
 .pnp.*
 
 # apiKey
-apiKey.py
+apikey_and_range.py
 create_json.py
 test.py
 #py
 __pycache__
 
 .venv
+
+.json
