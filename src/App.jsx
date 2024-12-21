@@ -1,3 +1,5 @@
+import NetworkGraph from "./components/NetWorkGraph";
+
 function App() {
     return (
       <div className="wrapper">
@@ -20,6 +22,7 @@ function App() {
                 </div>
               </div>
               <div className="vis-container">
+                <NetworkGraph/>
               </div>
               <div className="book-container">
               <h1>本棚</h1>
