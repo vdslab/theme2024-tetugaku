@@ -54,10 +54,10 @@ function NetworkGraph() {
                 .attr("r",7)
                 .attr("fill",function(d){ return color(d.group);})
 
-                const simulation = d3.forceSimulation(data.nodes)
-                .force("link", d3.forceLink(data.links).id(function(d) { return d.id; }))
-                .force("charge", d3.forceManyBody(0))
-                .force("center", d3.forceCenter(250, 250));
+            const simulation = d3.forceSimulation(data.nodes)
+            .force("link", d3.forceLink(data.links).id(function(d) { return d.id; }))
+            .force("charge", d3.forceManyBody(0).strength(-100))
+            .force("center", d3.forceCenter(250, 250));
 
             simulation.on("tick", () => {
                 link
