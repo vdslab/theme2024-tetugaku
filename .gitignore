@@ -131,7 +131,6 @@ dist
 
 # apiKey
 apikey_and_range.py
-create_json.py
 test.py
 #py
 __pycache__
