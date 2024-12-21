@@ -137,4 +137,7 @@ __pycache__
 
 .venv
 
-.json
+# json file
+buckup_data.json
+raw_data.json
+processed_data.json
