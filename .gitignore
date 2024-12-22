@@ -141,3 +141,5 @@ __pycache__
 buckup_data.json
 raw_data.json
 processed_data.json
+
+.DS_Store
