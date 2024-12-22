@@ -1,75 +1,77 @@
 /* item-container内部 */
 
 .list-container {
-    height:100%;
-    width:20%;
-    padding-left: 15px;
-    padding-right: 15px;
-    box-sizing: border-box;
+  height: 100%;
+  width: 20%;
+  padding-left: 15px;
+  padding-right: 15px;
+  box-sizing: border-box;
+}
+
+.info-list-container {
+  height: 100%;
+  width: 20%;
+
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.info-container {
+  height: 40%;
+  width: 100%;
+  background-color: rgba(175, 209, 209, 0.548);
+}
+
+.list-container {
+  height: 60%;
+  width: 100%;
+  background-color: rgb(253, 239, 199);
+}
+
+.vis-container {
+  height: 100%;
+  width: 50%;
+  background-color: rgb(220, 243, 197);
+  padding-left: 15px;
+  padding-right: 15px;
+  box-sizing: border-box;
+}
+
+.book-container {
+  height: 100%;
+  width: 30%;
+
+  padding-left: 15px;
+  padding-right: 15px;
+  box-sizing: border-box;
+  background-color: rgb(253, 239, 199);
+  background-clip: content-box; /* 背景色をcontent部分のみに限定 */
+}
+
+/* レスポンシブ設定 */
+@media (max-width: 768px) {
+  /* メインコンテナを縦に並べる */
+  .main-container {
+    flex-direction: column;
+    align-items: center;
   }
 
-  .info-list-container {
-    height:100%;
-    width:20%;
-
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-
-  .info-container {
-    height:40%;
-    width:100%;
-    background-color: rgba(175, 209, 209, 0.548);
-  }
-
-  .list-container {
-    height:60%;
-    width:100%;
-    background-color: rgb(253, 239, 199);
-  }
-  
-  .vis-container {
-      height:100%;
-      width: 50%;
-      background-color: rgb(220, 243, 197);
-      padding-left: 15px;
-      padding-right: 15px;
-      box-sizing: border-box;
-  }
-  
+  .vis-container,
   .book-container {
-    height: 100%;
-    width: 30%;
-  
-    padding-left: 15px;
-    padding-right: 15px;
-    box-sizing: border-box;
-    background-color: rgb(253, 239, 199);
-    background-clip: content-box; /* 背景色をcontent部分のみに限定 */
+    width: 100%;
+    height: 50%; /* 画面の高さに合わせて高さを調整 */
   }
-  
-  /* レスポンシブ設定 */
-  @media (max-width: 768px) {
-    /* メインコンテナを縦に並べる */
-    .main-container {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .vis-container, .book-container {
-      width: 100%;
-      height: 50%; /* 画面の高さに合わせて高さを調整 */
-    }
+}
+
+@media (max-width: 480px) {
+  /* セレクトボタンのテキストを小さくする */
+  h1 {
+    font-size: 1rem;
   }
-  
-  @media (max-width: 480px) {
-    /* セレクトボタンのテキストを小さくする */
-    h1 {
-      font-size: 1rem;
-    }
-  
-    /* ビジュアライゼーションエリアの高さを調整 */
-    .vis-container, .book-container {
-      height: 40%; /* より小さな画面で高さを調整 */
-    }
+
+  /* ビジュアライゼーションエリアの高さを調整 */
+  .vis-container,
+  .book-container {
+    height: 40%; /* より小さな画面で高さを調整 */
   }
+}
