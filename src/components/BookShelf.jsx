@@ -12,43 +12,51 @@ const BookShelf = ({ processed_data, nodeId }) => {
     const fetchBooks = async () => {
       if (!nodeId) return;
 
+      // 選択された著者名を取得
       const nodeName = processed_data.names.find(
         (e) => e.name_id === nodeId
       )?.name;
       if (!nodeName) return;
-
       setSelectedAuthor(nodeName);
+
+      // 選択されたノードのbook_idを取得
+      const nodeBooks = processed_data.books.filter(
+        (book) => book.name_id === nodeId
+      );
+      if (!nodeBooks.length) {
+        setBooks([]);
+        return;
+      }
+
       setLoading(true);
       setError(null);
 
       try {
-        // 20個リクエスト
-        const response = await fetch(
-          `https://www.googleapis.com/books/v1/volumes?q=inauthor:"${encodeURIComponent(
-            nodeName
-          )} "&maxResults=10&langRestrict=ja`
-        );
+        // 各book_idに対してGoogle Books APIを呼び出す
+        const bookPromises = nodeBooks.map(async (book) => {
+          const response = await fetch(
+            `https://www.googleapis.com/books/v1/volumes/${book.book_id}`
+          );
+          if (!response.ok) {
+            throw new Error(`Failed to fetch book: ${book.book_id}`);
+          }
+          return response.json();
+        });
 
-        // if (!response.ok) {
-        //   throw new Error("レスポンスの失敗");
-        // }
+        // すべての本の情報を取得
+        const booksData = await Promise.all(bookPromises);
 
-        const data = await response.json();
-
-        // サムネイルがある本を最大8冊
-        const bookData =
-          data.items
-            ?.filter((item) => item.volumeInfo.imageLinks?.thumbnail)
-            .slice(0, 8)
-            .map((item) => ({
-              id: item.id,
-              title: item.volumeInfo.title,
-              authors: item.volumeInfo.authors || [],
-              thumbnail: item.volumeInfo.imageLinks.thumbnail,
-              link: item.volumeInfo.infoLink,
-            })) || [];
-
-        setBooks(bookData);
+        // 必要なデータだけを抽出して整形
+        const formattedBooks = booksData
+          .filter((book) => book.volumeInfo.imageLinks?.thumbnail)
+          .map((book) => ({
+            id: book.id,
+            title: book.volumeInfo.title,
+            authors: book.volumeInfo.authors || [],
+            thumbnail: book.volumeInfo.imageLinks.thumbnail,
+            link: book.volumeInfo.infoLink,
+          }));
+        setBooks(formattedBooks);
       } catch (err) {
         setError("本の情報を取得できませんでした");
         console.error("Error fetching books:", err);
