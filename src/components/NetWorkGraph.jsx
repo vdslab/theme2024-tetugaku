@@ -6,6 +6,14 @@ function NetworkGraph({processed_data,onNodeClick}) {
     const [data,setData] = useState(null);
     const svgRef = useRef(null);
 
+    // useRefにズーム用インスタンスを保存
+    const zoomInstance = useRef(
+      d3.zoom().on("zoom", (event) => {
+        // "g" 要素に対して transform を適用
+        d3.select(svgRef.current).select("g.main-group").attr("transform", event.transform);
+      })
+    );
+
     useEffect(() => {
         setData(processed_data);
 
@@ -15,17 +23,28 @@ function NetworkGraph({processed_data,onNodeClick}) {
             onNodeClick(clickedNode.id);
         };
 
+        const zoomByNodeClick = (e,clickedNode) => {
+            const x = clickedNode.x;
+            const y = clickedNode.y;
+
+            // ノードを中心へ移動   
+            const toCenter = d3.zoomIdentity
+              .translate(250 - x, 250 - y)
+
+            svg.transition()
+               .duration(750)  
+               .call(zoomInstance.current.transform, toCenter);
+        }
+
 
         const svg = d3.select(svgRef.current)
             // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計　
             // -> 値が大きいほどグラフも大きくなる 
             .attr("viewBox", `0 0 500 415`)
-            .attr("preserveAspectRatio", "xMidYMid meet");
-        const zoom = d3.zoom().on("zoom", (event) => {
-            svgGroup.attr("transform", event.transform);
-        });
-        svg.call(zoom);
-        const svgGroup = svg.append("g")
+            .attr("preserveAspectRatio", "xMidYMid meet")
+            .call(zoomInstance.current);
+
+        const svgGroup = svg.append("g").attr("class", "main-group");
         
         // scaleOrdinalの引数は色範囲
         // 後程でるgroupの個数がドメイン
@@ -48,7 +67,8 @@ function NetworkGraph({processed_data,onNodeClick}) {
             .enter().append("circle")
             .attr("r",7)
             .attr("fill",function(d){ return color(d.group);})
-            .on("click.select", selectByNodeClick);
+            .on("click.select", selectByNodeClick)
+            .on("click.zoom", zoomByNodeClick);
 
         const simulation = d3.forceSimulation(data.nodes)
             .force("link", d3.forceLink(data.links).id(function(d) { return d.id; }))
