@@ -1,9 +1,10 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState ,useRef} from "react";
 import * as d3 from 'd3';
 
 
 function NetworkGraph({processed_data,onNodeClick}) {
     const [data,setData] = useState(null);
+    const svgRef = useRef(null);
 
     useEffect(() => {
         setData(processed_data);
@@ -13,19 +14,26 @@ function NetworkGraph({processed_data,onNodeClick}) {
         else{
             console.log(data);
             console.log("have data");
-            // .network-graphでsvg指定
-            const svg = d3.select(".network-graph")
+
+            const svg = d3.select(svgRef.current)
                 // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計　
                 // -> 値が大きいほどグラフも大きくなる 
                 .attr("viewBox", `0 0 500 415`)
                 .attr("preserveAspectRatio", "xMidYMid meet");
+
+            const zoom = d3.zoom().on("zoom", (event) => {
+                svgGroup.attr("transform", event.transform);
+            });
+            svg.call(zoom);
+
+            const svgGroup = svg.append("g")
             
             // scaleOrdinalの引数は色範囲
             // 後程でるgroupの個数がドメイン
             // ドメインの長さが範囲を超過する場合、範囲が循環して利用される   
             const color = d3.scaleOrdinal(d3.schemePaired);
 
-            const link = svg.append("g")
+            const link = svgGroup.append("g")
                 .attr("class", "link")
                 .selectAll("line")
                 .data(data.links)
@@ -34,7 +42,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
                 .attr("stroke", "black")
                 .attr("stroke-opacity", 0.6);
 
-            const node = svg.append("g")
+            const node = svgGroup.append("g")
                 .attr("class","node")
                 .selectAll("circle")
                 .data(data.nodes)
@@ -71,8 +79,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
     },[data])
 
     return (
-        <svg className="network-graph" >
-
+        <svg ref={svgRef} className="network-graph" >
         </svg>
     );
 };
