@@ -11,6 +11,11 @@ function NetworkGraph({processed_data,onNodeClick}) {
 
         if(!data)return;
 
+        const selectByNodeClick = (e,clickedNode) => {
+            onNodeClick(clickedNode.id);
+        };
+
+
         const svg = d3.select(svgRef.current)
             // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計　
             // -> 値が大きいほどグラフも大きくなる 
@@ -43,11 +48,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
             .enter().append("circle")
             .attr("r",7)
             .attr("fill",function(d){ return color(d.group);})
-            .on("click", (e,d) => {
-                // 第一引数はポインタイベント
-                // 第二引数がデータオブジェクト
-                onNodeClick(d.id)
-            })
+            .on("click.select", selectByNodeClick);
 
         const simulation = d3.forceSimulation(data.nodes)
             .force("link", d3.forceLink(data.links).id(function(d) { return d.id; }))
