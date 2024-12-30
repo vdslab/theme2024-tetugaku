@@ -14,7 +14,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
       })
     );
 
-    // 隣接リストの作成
+    // 隣接リストの準備
     const nearestNodeList = useRef({});
 
     useEffect(() => {
@@ -22,10 +22,12 @@ function NetworkGraph({processed_data,onNodeClick}) {
 
         if(!data)return;
 
+        // ノードクリックでonNodeClickを実行
         const selectByNodeClick = (e,clickedNode) => {
             onNodeClick(clickedNode.id);
         };
 
+        // ノードクリックでノードを中心へ移動
         const zoomByNodeClick = (e,clickedNode) => {
             const x = clickedNode.x;
             const y = clickedNode.y;
@@ -39,16 +41,15 @@ function NetworkGraph({processed_data,onNodeClick}) {
                .call(zoomInstance.current.transform, toCenter);
         }
 
+        // ノードクリックでノードとエッジをハイライト表示
         const highlightByNodeClick = (e,clickedNode) => {
             const nearests = nearestNodeList.current[clickedNode.id];
 
             node
               .transition()
               .duration(300)
-              .attr("fill-opacity", (d) => {
-                d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.2
-              }
-            );
+              .attr("fill-opacity", (d) => {d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.2}
+        );
         
             link
               .transition()
@@ -67,7 +68,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
         const svg = d3.select(svgRef.current)
             // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計　
             // -> 値が大きいほどグラフも大きくなる 
-            .attr("viewBox", `0 0 500 415`)
+            .attr("viewBox", `0 0 500 500`)
             .attr("preserveAspectRatio", "xMidYMid meet")
             .call(zoomInstance.current);
 
@@ -78,6 +79,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
         // ドメインの長さが範囲を超過する場合、範囲が循環して利用される   
         const color = d3.scaleOrdinal(d3.schemePaired);
 
+        // エッジの描画
         const link = svgGroup.append("g")
             .attr("class", "link")
             .selectAll("line")
@@ -87,6 +89,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
             .attr("stroke", "black")
             .attr("stroke-opacity", 0.6);
 
+        // ノードの描画
         const node = svgGroup.append("g")
             .attr("class","node")
             .selectAll("circle")
@@ -98,11 +101,13 @@ function NetworkGraph({processed_data,onNodeClick}) {
             .on("click.zoom", zoomByNodeClick)
             .on("click.highlight", highlightByNodeClick);
 
+        // シミュレーション設定
         const simulation = d3.forceSimulation(data.nodes)
             .force("link", d3.forceLink(data.links).id(function(d) { return d.id; }))
             .force("charge", d3.forceManyBody(0).strength(-100))
             .force("center", d3.forceCenter(250, 250));
 
+        // シミュレーション
         simulation.on("tick", () => {
             link
                 .attr("x1", d => d.source.x)
@@ -114,6 +119,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
                 .attr("cy", d => d.y);
         });
 
+        // 隣接リストの作成
         nearestNodeList.current = {};
         data.nodes.forEach((node) => {
             nearestNodeList.current[node.id] = new Set(); // 重複禁止
@@ -126,12 +132,6 @@ function NetworkGraph({processed_data,onNodeClick}) {
             nearestNodeList.current[sourceId].add(targetId);
             nearestNodeList.current[targetId].add(sourceId);
         });
-
-        // 再描画時にsvg内の要素を全て削除
-        return () => {
-            svg.selectAll("*").remove();
-        };
-        
     
     },[data])
 
