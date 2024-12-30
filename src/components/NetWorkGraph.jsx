@@ -14,6 +14,9 @@ function NetworkGraph({processed_data,onNodeClick}) {
       })
     );
 
+    // 隣接リストの作成
+    const nearestNodeList = useRef({});
+
     useEffect(() => {
         setData(processed_data);
 
@@ -36,6 +39,30 @@ function NetworkGraph({processed_data,onNodeClick}) {
                .call(zoomInstance.current.transform, toCenter);
         }
 
+        const highlightByNodeClick = (e,clickedNode) => {
+            const nearests = nearestNodeList.current[clickedNode.id];
+
+            node
+              .transition()
+              .duration(300)
+              .attr("fill-opacity", (d) => {
+                d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.2
+              }
+            );
+        
+            link
+              .transition()
+              .duration(300)
+              .attr("stroke-opacity", (l) => {
+                const sourceId = typeof l.source === "object" ? l.source.id : l.source;
+                const targetId = typeof l.target === "object" ? l.target.id : l.target;
+
+                return sourceId === clickedNode.id ||
+                  targetId === clickedNode.id
+                  ? 1
+                  : 0.1;
+            });
+        }
 
         const svg = d3.select(svgRef.current)
             // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計　
@@ -68,7 +95,8 @@ function NetworkGraph({processed_data,onNodeClick}) {
             .attr("r",7)
             .attr("fill",function(d){ return color(d.group);})
             .on("click.select", selectByNodeClick)
-            .on("click.zoom", zoomByNodeClick);
+            .on("click.zoom", zoomByNodeClick)
+            .on("click.highlight", highlightByNodeClick);
 
         const simulation = d3.forceSimulation(data.nodes)
             .force("link", d3.forceLink(data.links).id(function(d) { return d.id; }))
@@ -84,6 +112,19 @@ function NetworkGraph({processed_data,onNodeClick}) {
             node
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y);
+        });
+
+        nearestNodeList.current = {};
+        data.nodes.forEach((node) => {
+            nearestNodeList.current[node.id] = new Set(); // 重複禁止
+        });
+
+        data.links.forEach((link) => {
+            // forceシュミレーションが行われる際、source,targetの中身がidになったりobjectになったりするらしい
+            const sourceId = typeof link.source === "object" ? link.source.id : link.source;
+            const targetId = typeof link.target === "object" ? link.target.id : link.target;
+            nearestNodeList.current[sourceId].add(targetId);
+            nearestNodeList.current[targetId].add(sourceId);
         });
 
         // 再描画時にsvg内の要素を全て削除
