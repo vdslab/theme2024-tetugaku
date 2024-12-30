@@ -8,12 +8,9 @@ function NetworkGraph({processed_data,onNodeClick}) {
 
     useEffect(() => {
         setData(processed_data);
-        // dataが入っているときに、描画を行う
 
         if(!data)return;
-        
-        console.log(data);
-        console.log("have data");
+
         const svg = d3.select(svgRef.current)
             // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計　
             // -> 値が大きいほどグラフも大きくなる 
@@ -29,6 +26,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
         // 後程でるgroupの個数がドメイン
         // ドメインの長さが範囲を超過する場合、範囲が循環して利用される   
         const color = d3.scaleOrdinal(d3.schemePaired);
+
         const link = svgGroup.append("g")
             .attr("class", "link")
             .selectAll("line")
@@ -37,6 +35,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
             .attr("stroke-width", function(d) { return Math.sqrt(d.value); })
             .attr("stroke", "black")
             .attr("stroke-opacity", 0.6);
+
         const node = svgGroup.append("g")
             .attr("class","node")
             .selectAll("circle")
@@ -49,10 +48,12 @@ function NetworkGraph({processed_data,onNodeClick}) {
                 // 第二引数がデータオブジェクト
                 onNodeClick(d.id)
             })
+
         const simulation = d3.forceSimulation(data.nodes)
-        .force("link", d3.forceLink(data.links).id(function(d) { return d.id; }))
-        .force("charge", d3.forceManyBody(0).strength(-100))
-        .force("center", d3.forceCenter(250, 250));
+            .force("link", d3.forceLink(data.links).id(function(d) { return d.id; }))
+            .force("charge", d3.forceManyBody(0).strength(-100))
+            .force("center", d3.forceCenter(250, 250));
+
         simulation.on("tick", () => {
             link
                 .attr("x1", d => d.source.x)
@@ -63,6 +64,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y);
         });
+
         // 再描画時にsvg内の要素を全て削除
         return () => {
             svg.selectAll("*").remove();
