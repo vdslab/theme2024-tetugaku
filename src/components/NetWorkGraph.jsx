@@ -48,8 +48,9 @@ function NetworkGraph({processed_data,onNodeClick}) {
             node
               .transition()
               .duration(300)
-              .attr("fill-opacity", (d) => {d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.2}
-        );
+              .attr("fill-opacity", (d) => {
+                return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.2;
+            });
         
             link
               .transition()
@@ -58,10 +59,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
                 const sourceId = typeof l.source === "object" ? l.source.id : l.source;
                 const targetId = typeof l.target === "object" ? l.target.id : l.target;
 
-                return sourceId === clickedNode.id ||
-                  targetId === clickedNode.id
-                  ? 1
-                  : 0.1;
+                return sourceId === clickedNode.id || targetId === clickedNode.id ? 1 : 0.1;
             });
         }
 
@@ -99,7 +97,24 @@ function NetworkGraph({processed_data,onNodeClick}) {
             .attr("fill",function(d){ return color(d.group);})
             .on("click.select", selectByNodeClick)
             .on("click.zoom", zoomByNodeClick)
-            .on("click.highlight", highlightByNodeClick);
+            .on("mouseover.highlight", highlightByNodeClick);
+
+        const labels = svgGroup
+            .append("g")
+            .attr("class", "labels")
+            .selectAll("text")
+            .data(data.nodes)
+            .enter()
+            .append("text")
+            .attr("text-anchor", "middle")
+            .attr("dy", -10)
+            .attr("font-size", "11px")
+            .attr("fill", "#333")
+            .text((d) => {
+              // names配列の中から対応するIDのオブジェクトを探して name を返す
+              const nameObj = data.names?.find((n) => n.name_id === d.id);
+              return nameObj ? nameObj.name : d.id;
+            });
 
         // シミュレーション設定
         const simulation = d3.forceSimulation(data.nodes)
@@ -117,6 +132,10 @@ function NetworkGraph({processed_data,onNodeClick}) {
             node
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y);
+
+            labels
+                .attr("x", (d) => d.x)
+                .attr("y", (d) => d.y);
         });
 
         // 隣接リストの作成
@@ -132,6 +151,11 @@ function NetworkGraph({processed_data,onNodeClick}) {
             nearestNodeList.current[sourceId].add(targetId);
             nearestNodeList.current[targetId].add(sourceId);
         });
+
+        // 再描画時にクリーンアップ
+        return () => {
+            d3.select(svgRef.current).selectAll("*").remove();
+        };
     
     },[data])
 
