@@ -1,65 +1,101 @@
 import React, { useEffect, useState } from "react";
 import "/styles/book-shelf.css";
 
+const my_api_key = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
+
 const BookShelf = ({ processed_data, nodeId }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  // 著作名
-  const [selectedAuthor, setSelectedAuthor] = useState("");
+  const [authorChain, setAuthorChain] = useState([]);
 
   useEffect(() => {
     const fetchBooks = async () => {
       if (!nodeId) return;
 
-      // 選択された著者名を取得
-      const nodeName = processed_data.names.find(
-        (e) => e.name_id === nodeId
-      )?.name;
-      if (!nodeName) return;
-      setSelectedAuthor(nodeName);
+      // 選択された著者とその関連著者のチェーンを作成
+      const createAuthorChain = () => {
+        const selectedAuthor = processed_data.names.find(
+          (e) => e.name_id === nodeId
+        );
+        console.log("Selected author:", selectedAuthor);
 
-      // 選択されたノードのbook_idを取得
-      const nodeBooks = processed_data.books.filter(
-        (book) => book.name_id === nodeId
-      );
-      if (!nodeBooks.length) {
-        setBooks([]);
-        return;
-      }
+        if (!selectedAuthor) return [];
+
+        const relatedLinks = processed_data.links.filter((link) => {
+          console.log("Link being checked:", {
+            source: link.source,
+            target: link.target,
+          });
+          return link.source.id === nodeId;
+        });
+
+        const relatedIds = relatedLinks.map((link) => link.target.id);
+        console.log("Related author IDs:", relatedIds);
+
+        const relatedAuthors = relatedIds
+          .map((id) => processed_data.names.find((name) => name.name_id === id))
+          .filter((author) => author);
+
+        const chain = [selectedAuthor, ...relatedAuthors];
+        console.log("Final author chain:", chain);
+        return chain;
+      };
+
+      const authorChain = createAuthorChain();
+      setAuthorChain(authorChain);
 
       setLoading(true);
       setError(null);
 
       try {
-        // 各book_idに対してGoogle Books APIを呼び出す
-        const bookPromises = nodeBooks.map(async (book) => {
-          const response = await fetch(
-            `https://www.googleapis.com/books/v1/volumes/${book.book_id}`
-          );
-          if (!response.ok) {
-            throw new Error(`Failed to fetch book: ${book.book_id}`);
-          }
-          return response.json();
-        });
+        const allBooksData = await Promise.all(
+          authorChain.map(async (author) => {
+            const authorBooks = processed_data.books.filter(
+              (book) => book.name_id === author.name_id
+            );
 
-        // すべての本の情報を取得
-        const booksData = await Promise.all(bookPromises);
+            if (!authorBooks.length) {
+              return {
+                author: author.name,
+                books: [],
+              };
+            }
 
-        // 必要なデータだけを抽出して整形
-        const formattedBooks = booksData
-          .filter((book) => book.volumeInfo.imageLinks?.thumbnail)
-          .map((book) => ({
-            id: book.id,
-            title: book.volumeInfo.title,
-            authors: book.volumeInfo.authors || [],
-            thumbnail: book.volumeInfo.imageLinks.thumbnail,
-            link: book.volumeInfo.infoLink,
-          }));
-        setBooks(formattedBooks);
+            const bookPromises = authorBooks.map(async (book) => {
+              const response = await fetch(
+                `https://www.googleapis.com/books/v1/volumes/${book.book_id}?key=${my_api_key}`
+              );
+              if (!response.ok) {
+                throw new Error(`Failed to fetch book: ${book.book_id}`);
+              }
+              return response.json();
+            });
+
+            const booksData = await Promise.all(bookPromises);
+
+            const formattedBooks = booksData
+              .filter((book) => book.volumeInfo.imageLinks?.thumbnail)
+              .map((book) => ({
+                id: book.id,
+                title: book.volumeInfo.title,
+                authors: book.volumeInfo.authors || [],
+                thumbnail: book.volumeInfo.imageLinks.thumbnail,
+                link: `https://books.google.co.jp/books/about/?id=${book.id}`,
+              }));
+
+            return {
+              author: author.name,
+              books: formattedBooks,
+            };
+          })
+        );
+
+        console.log("Final books data:", allBooksData);
+        setBooks(allBooksData);
       } catch (err) {
-        setError("本の情報を取得できませんでした");
         console.error("Error fetching books:", err);
+        setError("本の情報を取得できませんでした");
       } finally {
         setLoading(false);
       }
@@ -73,38 +109,41 @@ const BookShelf = ({ processed_data, nodeId }) => {
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className="error-message">{error}</div>;
   }
 
   return (
     <div className="book-shelf-container">
-      {selectedAuthor && (
-        <h2 className="selected-author-name">{selectedAuthor}</h2>
-      )}
-      <div className="book-shelf-grid">
-        {books.map((book) => (
-          <div key={book.id} className="book-item">
-            <a
-              href={book.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="book-link"
-            >
-              <div className="book-image-container">
-                <img
-                  src={book.thumbnail}
-                  alt={book.title}
-                  className="book-image"
-                />
-              </div>
-              <h3 className="book-title">{book.title}</h3>
-            </a>
-          </div>
-        ))}
-        {books.length === 0 && !loading && (
-          <div className="no-books-message">書籍が見つかりませんでした</div>
-        )}
-      </div>
+      {books.map((authorData, index) => (
+        <div key={index} className="author-section">
+          <h2 className="author-name">{authorData.author}</h2>
+          {authorData.books.length > 0 ? (
+            <div className="book-shelf-grid">
+              {authorData.books.map((book) => (
+                <div key={book.id} className="book-item">
+                  <a
+                    href={book.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="book-link"
+                  >
+                    <div className="book-image-container">
+                      <img
+                        src={book.thumbnail}
+                        alt={book.title}
+                        className="book-image"
+                      />
+                    </div>
+                    <h3 className="book-title">{book.title}</h3>
+                  </a>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="no-books-message">著作がありません</div>
+          )}
+        </div>
+      ))}
     </div>
   );
 };

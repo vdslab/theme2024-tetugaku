@@ -44,7 +44,6 @@ function App() {
               />
             </div>
             <div className="book-container">
-              <h1>本棚</h1>
               <BookShelf
                 processed_data={processed_data}
                 nodeId={clickedNodeId}
