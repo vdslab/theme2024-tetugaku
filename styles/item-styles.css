@@ -1,26 +1,27 @@
 /* item-container内部 */
 
 
-  .info-list-container {
-    height:100%;
-    width:20%;
 
-    padding-left: 15px;
-    padding-right: 15px;
-  }
+.info-list-container {
+  height: 100%;
+  width: 20%;
 
-  .info-container {
-    height:40%;
-    width:100%;
-    background-color: rgba(175, 209, 209, 0.548);
-  }
+  padding-left: 15px;
+  padding-right: 15px;
+}
 
-  .list-container {
-    height:60%;
-    width:100%;
-    background-color: rgb(253, 239, 199);
-  }
-  
+.info-container {
+  height: 40%;
+  width: 100%;
+  background-color: rgba(175, 209, 209, 0.548);
+}
+
+.list-container {
+  height: 60%;
+  width: 100%;
+  background-color: rgb(253, 239, 199);
+}
+
   .vis-container {
       height:100%;
       width: 50%;
