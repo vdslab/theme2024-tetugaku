@@ -17,7 +17,8 @@ def process_json(data,file):
         "names": [],
         "nodes": [],
         "links": [],
-        "keywords": []
+        "keywords": [],
+        "books": []
     }
 
     for row in rows:
@@ -26,6 +27,7 @@ def process_json(data,file):
 
         # 文字列から配列に変更
         keywords = [item.strip().strip("\"") for item in row_dict["keywords"].split(",")]
+        book_ids = ast.literal_eval(row_dict["books"])
         target_ids = ast.literal_eval(row_dict["target_id"])
         relations = ast.literal_eval(row_dict["relations"])
 
@@ -73,12 +75,14 @@ def process_json(data,file):
             for keyword in keywords
         ])
 
-        # これと同じ 
-        # for keyword in keywords:
-        #     result["keywords"].append({
-        #         "name_id" : name_id,
-        #         "keyword": keyword        
-        # })
+        # booksの作成
+        result["books"].extend([
+            {
+                "name_id" : name_id,
+                "book_id": book_id
+            }
+            for book_id in book_ids
+        ])
 
     # データをファイルに保存
     with open(file, 'w', encoding='utf-8') as file:
