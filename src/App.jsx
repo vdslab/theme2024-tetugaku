@@ -23,13 +23,12 @@ function App() {
         <div className="full-container">
           <div className="select-container">
             <h1>セレクトボタン</h1>
-            <SearchAndFilter processed_data={processed_data}/>
+            <SearchAndFilter processed_data={processed_data} />
           </div>
           <div className="item-container">
             {/* item-styles.css適用箇所 */}
             <div className="info-list-container">
               <div className="info-container">
-                <h1>思想家の詳細</h1>
                 <Information
                   processed_data={processed_data}
                   nodeId={clickedNodeId}
