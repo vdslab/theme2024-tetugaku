@@ -11,7 +11,9 @@
 .info-container {
   height: 40%;
   width: 100%;
-  background-color: rgba(175, 209, 209, 0.548);
+  overflow-y: auto;
+  border-radius: 4px;
+  background-color: #7b7b79;
 }
 
 .list-container {
@@ -37,11 +39,13 @@ svg {
 .book-container {
   height: 100%;
   width: 30%;
-
+  color: #f1f1f1;
   padding-left: 15px;
   padding-right: 15px;
   box-sizing: border-box;
-  background-color: rgb(253, 239, 199);
+  overflow-y: auto;
+  border-radius: 4px;
+  background-color: #7b7b79;
   background-clip: content-box; /* 背景色をcontent部分のみに限定 */
 }
 

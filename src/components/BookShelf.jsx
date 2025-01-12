@@ -105,11 +105,19 @@ const BookShelf = ({ processed_data, nodeId }) => {
   }
 
   if (!nodeId) {
-    return <div className="p-4">ノードを選択してください</div>;
+    return (
+      <div className="book-shelf-container">
+        <div className="book-shelf-header">哲学者の主著</div>
+        <div className="book-shelf-content">
+          <div className="no-selection-message">ノードを選択してください</div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="book-shelf-container">
+      <div className="book-shelf-header">哲学者の主著</div>
       {books.map((authorData, index) => (
         <div key={index} className="author-section">
           <h2 className="author-name">{authorData.author}</h2>

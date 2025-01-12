@@ -1,0 +1,38 @@
+.information-container {
+  border: 1px solid #090909;
+  max-height: 40vh;
+  overflow-y: auto;
+  border-radius: 4px;
+  color: #f1f1f1;
+}
+
+.information-content {
+  padding: 0.3rem 1rem;
+}
+
+.information-header {
+  padding: 0.5rem;
+  /* border-bottom: 1px solid #090909; */
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.5rem; /* 文字サイズを大きく */
+}
+
+/* スクロールバーのスタイリング */
+.information-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.information-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.information-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.information-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
