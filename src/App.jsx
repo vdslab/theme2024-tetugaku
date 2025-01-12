@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import NetworkGraph from "./components/NetWorkGraph";
-import Information from "./components/Information"
+import Information from "./components/Information";
+import SearchAndFilter from "./components/SearchAndFilter";
 import processed_data from "/create_json/output_data/processed_data";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <div className="full-container">
           <div className="select-container">
             <h1>セレクトボタン</h1>
+            <SearchAndFilter processed_data={processed_data}/>
           </div>
           <div className="item-container">
             {/* item-styles.css適用箇所 */}
