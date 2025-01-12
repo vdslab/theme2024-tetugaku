@@ -18,27 +18,20 @@ const BookShelf = ({ processed_data, nodeId }) => {
         const selectedAuthor = processed_data.names.find(
           (e) => e.name_id === nodeId
         );
-        console.log("Selected author:", selectedAuthor);
 
         if (!selectedAuthor) return [];
 
         const relatedLinks = processed_data.links.filter((link) => {
-          console.log("Link being checked:", {
-            source: link.source,
-            target: link.target,
-          });
           return link.source.id === nodeId;
         });
 
         const relatedIds = relatedLinks.map((link) => link.target.id);
-        console.log("Related author IDs:", relatedIds);
 
         const relatedAuthors = relatedIds
           .map((id) => processed_data.names.find((name) => name.name_id === id))
           .filter((author) => author);
 
         const chain = [selectedAuthor, ...relatedAuthors];
-        console.log("Final author chain:", chain);
         return chain;
       };
 
@@ -91,7 +84,6 @@ const BookShelf = ({ processed_data, nodeId }) => {
           })
         );
 
-        console.log("Final books data:", allBooksData);
         setBooks(allBooksData);
       } catch (err) {
         console.error("Error fetching books:", err);
@@ -110,6 +102,10 @@ const BookShelf = ({ processed_data, nodeId }) => {
 
   if (error) {
     return <div className="error-message">{error}</div>;
+  }
+
+  if (!nodeId) {
+    return <div className="p-4">ノードを選択してください</div>;
   }
 
   return (
