@@ -49,7 +49,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
               .transition()
               .duration(300)
               .attr("fill-opacity", (d) => {
-                return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.2;
+                return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.5;
             });
         
             link
@@ -75,7 +75,7 @@ function NetworkGraph({processed_data,onNodeClick}) {
         // scaleOrdinalの引数は色範囲
         // 後程でるgroupの個数がドメイン
         // ドメインの長さが範囲を超過する場合、範囲が循環して利用される   
-        const color = d3.scaleOrdinal(d3.schemePaired);
+        const color = d3.scaleOrdinal(d3.schemeCategory10);
 
         // エッジの描画
         const link = svgGroup.append("g")

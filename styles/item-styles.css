@@ -1,12 +1,5 @@
 /* item-container内部 */
 
-.list-container {
-    height:100%;
-    width:20%;
-    padding-left: 15px;
-    padding-right: 15px;
-    box-sizing: border-box;
-  }
 
   .info-list-container {
     height:100%;
@@ -31,11 +24,17 @@
   .vis-container {
       height:100%;
       width: 50%;
-      background-color: rgb(220, 243, 197);
+      background-color: #f0f0f0;
       padding-left: 15px;
       padding-right: 15px;
       box-sizing: border-box;
   }
+
+  svg {
+    height: 100%; /* 親要素に合わせる */
+    width: 100%; /* 必要なら幅も調整 */
+}
+
   
   .book-container {
     height: 100%;
