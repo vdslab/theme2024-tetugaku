@@ -23,7 +23,9 @@
   border: 1px solid #090909;
   overflow-y: auto;
   border-radius: 4px;
-  max-width: 100vh;
+  /* max-height: 100vh; */
+  max-width: 100vw; /* vhをvwに変更 */
+  max-height: 80vh;
 }
 
 /* .book-shelf-grid {
@@ -95,4 +97,23 @@
   font-weight: bold;
   /* color: #1f2937; */
   color: #f1f1f1;
+}
+
+/* スクロールバーのスタイリング */
+.book-shelf-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.book-shelf-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.book-shelf-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.book-shelf-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

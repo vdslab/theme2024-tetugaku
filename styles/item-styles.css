@@ -13,7 +13,7 @@
   width: 100%;
   overflow-y: auto;
   border-radius: 4px;
-  background-color: #7b7b79;
+  /* background-color: #7b7b79; */
 }
 
 .list-container {
@@ -25,7 +25,12 @@
 .vis-container {
   height: 100%;
   width: 45%;
-  background-color: #f0f0f0;
+  /* padding: 2em; */
+  /* 二重枠線↓ */
+  border: 1px solid #090909;
+  outline: 1px solid #090909;
+  outline-offset: 2px;
+  /* background-color: #7b7b79; */
   padding-left: 15px;
   padding-right: 15px;
   box-sizing: border-box;
@@ -45,7 +50,7 @@ svg {
   box-sizing: border-box;
   overflow-y: auto;
   border-radius: 4px;
-  background-color: #7b7b79;
+  /* background-color: #7b7b79; */
   background-clip: content-box; /* 背景色をcontent部分のみに限定 */
 }
 

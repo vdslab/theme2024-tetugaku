@@ -81,7 +81,9 @@ function NetworkGraph({ processed_data, onNodeClick }) {
     // scaleOrdinalの引数は色範囲
     // 後程でるgroupの個数がドメイン
     // ドメインの長さが範囲を超過する場合、範囲が循環して利用される
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    const color = d3
+      .scaleOrdinal()
+      .range(["#2A2D7A", "#BF291D", "#458323", "#FCE94E"]);
 
     // エッジの描画
     const link = svgGroup
