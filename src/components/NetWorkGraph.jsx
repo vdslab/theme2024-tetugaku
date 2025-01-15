@@ -2,7 +2,7 @@ import { useEffect, useState ,useRef} from "react";
 import * as d3 from 'd3';
 
 
-function NetworkGraph({processed_data,onNodeClick}) {
+function NetworkGraph({processed_data,onNodeClick,selectedNodeId}) {
     const [data,setData] = useState(null);
     const svgRef = useRef(null);
 
@@ -158,6 +158,21 @@ function NetworkGraph({processed_data,onNodeClick}) {
         };
     
     },[data])
+
+    // selectedNodeIdを持つノードを中心に移動
+    useEffect(() => {
+        if (!data || !selectedNodeId) return;
+
+        const selectedNode = data.nodes.find((node) => node.id === selectedNodeId);
+        if (selectedNode) {
+            const x = selectedNode.x;
+            const y = selectedNode.y;
+
+            const toCenter = d3.zoomIdentity.translate(250 - x, 250 - y);
+
+            d3.select(svgRef.current).transition().duration(750).call(zoomInstance.current.transform, toCenter);
+        }
+    }, [selectedNodeId, data]);    
 
     return (
         <svg ref={svgRef} className="network-graph" >
