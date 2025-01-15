@@ -1,24 +1,7 @@
-import { useEffect, useState, useRef } from "react";
-import * as d3 from "d3";
+import { useEffect, useState ,useRef} from "react";
+import * as d3 from 'd3';
 
-function NetworkGraph({ processed_data, onNodeClick }) {
-  const [data, setData] = useState(null);
-  const svgRef = useRef(null);
-
-  // useRefにズーム用インスタンスを保存
-  const zoomInstance = useRef(
-    d3.zoom().on("zoom", (event) => {
-      // "g" 要素に対して transform を適用
-      d3.select(svgRef.current)
-        .select("g.main-group")
-        .attr("transform", event.transform);
-    })
-  );
-
-  // 隣接リストの準備
-  const nearestNodeList = useRef({});
-
-  useEffect(() => {
+ useEffect(() => {
     setData(processed_data);
 
     if (!data) return;
@@ -45,41 +28,75 @@ function NetworkGraph({ processed_data, onNodeClick }) {
         .call(zoomInstance.current.transform, toCenter);
     };
 
-    // ノードクリックでノードとエッジをハイライト表示
-    const highlightByNodeClick = (e, clickedNode) => {
-      const nearests = nearestNodeList.current[clickedNode.id];
+function NetworkGraph({processed_data,onNodeClick,selectedNodeId}) {
+    const [data,setData] = useState(null);
+    const svgRef = useRef(null);
 
-      node
-        .transition()
-        .duration(300)
-        .attr("fill-opacity", (d) => {
-          return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.5;
-        });
+    // useRefにズーム用インスタンスを保存
+    const zoomInstance = useRef(
+      d3.zoom().on("zoom", (event) => {
+        // "g" 要素に対して transform を適用
+        d3.select(svgRef.current).select("g.main-group").attr("transform", event.transform);
+      })
+    );
 
-      link
-        .transition()
-        .duration(300)
-        .attr("stroke-opacity", (l) => {
-          const sourceId =
-            typeof l.source === "object" ? l.source.id : l.source;
-          const targetId =
-            typeof l.target === "object" ? l.target.id : l.target;
+    // 隣接リストの準備
+    const nearestNodeList = useRef({});
 
-          return sourceId === clickedNode.id || targetId === clickedNode.id
-            ? 1
-            : 0.1;
-        });
-    };
+    useEffect(() => {
+        setData(processed_data);
 
-    const svg = d3
-      .select(svgRef.current)
-      // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計
-      // -> 値が大きいほどグラフも大きくなる
-      .attr("viewBox", `0 0 500 500`)
-      .attr("preserveAspectRatio", "xMidYMid meet")
-      .call(zoomInstance.current);
+        if(!data)return;
 
-    const svgGroup = svg.append("g").attr("class", "main-group");
+        // ノードクリックでonNodeClickを実行
+        const selectByNodeClick = (e,clickedNode) => {
+            onNodeClick(clickedNode.id);
+        };
+
+        // ノードクリックでノードを中心へ移動
+        const zoomByNodeClick = (e,clickedNode) => {
+            const x = clickedNode.x;
+            const y = clickedNode.y;
+
+            // ノードを中心へ移動   
+            const toCenter = d3.zoomIdentity
+              .translate(250 - x, 250 - y)
+
+            svg.transition()
+               .duration(750)  
+               .call(zoomInstance.current.transform, toCenter);
+        }
+
+        // ノードクリックでノードとエッジをハイライト表示
+        const highlightByNodeClick = (e,clickedNode) => {
+            const nearests = nearestNodeList.current[clickedNode.id];
+
+            node
+              .transition()
+              .duration(300)
+              .attr("fill-opacity", (d) => {
+                return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.5;
+            });
+        
+            link
+              .transition()
+              .duration(300)
+              .attr("stroke-opacity", (l) => {
+                const sourceId = typeof l.source === "object" ? l.source.id : l.source;
+                const targetId = typeof l.target === "object" ? l.target.id : l.target;
+
+                return sourceId === clickedNode.id || targetId === clickedNode.id ? 1 : 0.1;
+            });
+        }
+
+        const svg = d3.select(svgRef.current)
+            // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計　
+            // -> 値が大きいほどグラフも大きくなる 
+            .attr("viewBox", `0 0 500 500`)
+            .attr("preserveAspectRatio", "xMidYMid meet")
+            .call(zoomInstance.current);
+
+        const svgGroup = svg.append("g").attr("class", "main-group");
 
     // scaleOrdinalの引数は色範囲
     // 後程でるgroupの個数がドメイン
@@ -181,6 +198,18 @@ function NetworkGraph({ processed_data, onNodeClick }) {
       d3.select(svgRef.current).selectAll("*").remove();
     };
   }, [data]);
+  
+  // selectedNodeIdを持つノードを中心に移動
+  useEffect(() => {
+      if (!data || !selectedNodeId) return
+      const selectedNode = data.nodes.find((node) => node.id === selectedNodeId);
+      if (selectedNode) {
+          const x = selectedNode.x;
+          const y = selectedNode.y
+          const toCenter = d3.zoomIdentity.translate(250 - x, 250 - y)
+          d3.select(svgRef.current).transition().duration(750).call(zoomInstance.current.transform, toCenter);
+      }
+  }, [selectedNodeId, data]);  
 
   return <svg ref={svgRef} className="network-graph"></svg>;
 }
