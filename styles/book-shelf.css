@@ -6,8 +6,8 @@
 
 .no-books-message {
   width: 100%;
-  /* color: #6b7280; */
-  color: #f1f1f1;
+  color: #454545;
+  /* color: #f1f1f1; */
 }
 
 .book-shelf-header {
@@ -71,8 +71,8 @@
 .book-title {
   font-size: 0.75rem;
   text-align: center;
-  /* color: #1f2937; */
-  color: #f1f1f1;
+  color: #454545;
+  /* color: #f1f1f1; */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -87,7 +87,7 @@
   margin-bottom: 1rem;
   font-size: 1.25rem;
   /* color: #1f2937; */
-  color: #f1f1f1;
+  color: #454545;
 }
 
 .related-authors-title {
@@ -95,8 +95,8 @@
   margin-bottom: 1rem;
   font-size: 1.25rem;
   font-weight: bold;
-  /* color: #1f2937; */
-  color: #f1f1f1;
+  color: #454545;
+  /* color: #f1f1f1; */
 }
 
 /* スクロールバーのスタイリング */

@@ -3,7 +3,8 @@
   max-height: 40vh;
   overflow-y: auto;
   border-radius: 4px;
-  color: #f1f1f1;
+  /* color: #f1f1f1; */
+  color: #454545;
 }
 
 .information-content {

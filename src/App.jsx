@@ -4,6 +4,7 @@ import Information from "./components/Information";
 import SearchAndFilter from "./components/SearchAndFilter";
 import processed_data from "/create_json/output_data/processed_data";
 import BookShelf from "./components/BookShelf";
+import SelectNode from "./components/SelectNode";
 
 function App() {
   const [clickedNodeId, setClickedNodeId] = useState(null);
@@ -39,6 +40,10 @@ function App() {
               </div>
             </div>
             <div className="vis-container">
+              <SelectNode
+                processed_data={processed_data}
+                nodeId={clickedNodeId}
+              />
               <NetworkGraph
                 processed_data={processed_data}
                 onNodeClick={handleNodeClick}
