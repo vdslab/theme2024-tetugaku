@@ -9,7 +9,7 @@ import SelectNode from "./components/SelectNode";
 function App() {
   const [clickedNodeId, setClickedNodeId] = useState(null);
   // ノードクリックを感知して、idをclickedNodeIdにセット
-  const handleNodeClick = (newNodeId) => {
+  const handleSetNodeId = (newNodeId) => {
     setClickedNodeId(newNodeId);
   };
 
@@ -23,8 +23,8 @@ function App() {
         {/* main-styles.css適用箇所 */}
         <div className="full-container">
           <div className="select-container">
-            {/* <h1>セレクトボタン</h1> */}
-            <SearchAndFilter processed_data={processed_data} />
+ <h1>セレクトボタン</h1>
+            <SearchAndFilter processed_data={processed_data} selectNode={handleSetNodeId} />
           </div>
           <div className="item-container">
             {/* item-styles.css適用箇所 */}
@@ -46,7 +46,8 @@ function App() {
               />
               <NetworkGraph
                 processed_data={processed_data}
-                onNodeClick={handleNodeClick}
+                onNodeClick={handleSetNodeId}
+                selectedNodeId={clickedNodeId}
               />
             </div>
             <div className="book-container">
