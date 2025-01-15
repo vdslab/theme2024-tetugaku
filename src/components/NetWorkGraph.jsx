@@ -77,7 +77,7 @@ function NetworkGraph({processed_data,onNodeClick,selectedNodeId}) {
     // ドメインの長さが範囲を超過する場合、範囲が循環して利用される
     const color = d3
       .scaleOrdinal()
-      .range(["#2A2D7A", "#BF291D", "#458323", "#FCE94E"]);
+      .range(["#5EC2A2", "#626BFF", "#CD55D3", "#FCE94E"]);
 
     // エッジの描画
     const link = svgGroup
@@ -119,7 +119,7 @@ function NetworkGraph({processed_data,onNodeClick,selectedNodeId}) {
       .attr("text-anchor", "middle")
       .attr("dy", -10)
       .attr("font-size", "11px")
-      .attr("fill", "#f1f1f1")
+      .attr("fill", "#454545")
       .text((d) => {
         // names配列の中から対応するIDのオブジェクトを探して name を返す
         const nameObj = data.names?.find((n) => n.name_id === d.id);

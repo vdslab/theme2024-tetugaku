@@ -1,6 +1,7 @@
 body {
   height: 100%;
-  background: linear-gradient(to bottom, #7b7b79, #5a5a5a, #40403e) fixed;
+  /* background: linear-gradient(to bottom, #7b7b79, #5a5a5a, #40403e) fixed; */
+  background: #f1ebf0;
   margin: 0;
   padding: 0;
 }
@@ -8,7 +9,7 @@ body {
 .wrapper {
   height: 100%;
   /* 文字の間隔を少し開けた */
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
 
   /* padding-left: 15px;
   padding-right: 15px; */
