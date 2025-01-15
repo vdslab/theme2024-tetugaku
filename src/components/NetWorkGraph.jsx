@@ -34,7 +34,10 @@ function NetworkGraph({ processed_data, onNodeClick }) {
       const y = clickedNode.y;
 
       // ノードを中心へ移動
-      const toCenter = d3.zoomIdentity.translate(250 - x, 250 - y);
+      const toCenter = d3.zoomIdentity
+        .translate(250 - x * 2, 250 - y * 2)
+        .scale(2);
+      //クリックした時のzoomレベルをあげたい
 
       svg
         .transition()
@@ -141,7 +144,8 @@ function NetworkGraph({ processed_data, onNodeClick }) {
           return d.id;
         })
       )
-      .force("charge", d3.forceManyBody(0).strength(-100))
+      // ノードの距離を縮めたい
+      .force("charge", d3.forceManyBody(0).strength(-30))
       .force("center", d3.forceCenter(250, 250));
 
     // シミュレーション

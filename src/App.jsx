@@ -23,7 +23,7 @@ function App() {
         {/* main-styles.css適用箇所 */}
         <div className="full-container">
           <div className="select-container">
-            <h1>セレクトボタン</h1>
+            {/* <h1>セレクトボタン</h1> */}
             <SearchAndFilter processed_data={processed_data} />
           </div>
           <div className="item-container">
