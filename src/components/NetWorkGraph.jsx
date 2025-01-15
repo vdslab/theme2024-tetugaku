@@ -74,7 +74,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId }) {
       .select(svgRef.current)
       // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計
       // -> 値が大きいほどグラフも大きくなる
-      .attr("viewBox", `0 0 500 500`)
+.attr("viewBox", `0 0 500 500`)
       .attr("preserveAspectRatio", "xMidYMid meet")
       .call(zoomInstance.current);
 
@@ -179,8 +179,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId }) {
       d3.select(svgRef.current).selectAll("*").remove();
     };
   }, [data]);
-
-  // selectedNodeIdを持つノードを中心に移動
+// selectedNodeIdを持つノードを中心に移動
   useEffect(() => {
     if (!data || !selectedNodeId) return;
     const selectedNode = data.nodes.find((node) => node.id === selectedNodeId);
