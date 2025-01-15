@@ -2,8 +2,8 @@
 
 .info-list-container {
   height: 100%;
-  width: 25%;
-
+  width: 30%;
+  margin-top: 10px;
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -24,9 +24,10 @@
 
 .vis-container {
   height: 100%;
-  width: 45%;
+  width: 40%;
   /* padding: 2em; */
   /* 二重枠線↓ */
+  margin-top: 10px;
   border: 1px solid #090909;
   outline: 1px solid #090909;
   outline-offset: 2px;
@@ -46,6 +47,7 @@ svg {
 .book-container {
   height: 100%;
   width: 30%;
+  margin-top: 10px;
   /* color: #f1f1f1; */
   color: #454545;
   padding-left: 15px;

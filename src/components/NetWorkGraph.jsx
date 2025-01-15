@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 
-function NetworkGraph({ processed_data, onNodeClick }) {
+function NetworkGraph({ processed_data, onNodeClick, selectedNodeId }) {
   const [data, setData] = useState(null);
   const svgRef = useRef(null);
 
@@ -37,7 +37,6 @@ function NetworkGraph({ processed_data, onNodeClick }) {
       const toCenter = d3.zoomIdentity
         .translate(250 - x * 2, 250 - y * 2)
         .scale(2);
-      //クリックした時のzoomレベルをあげたい
 
       svg
         .transition()
@@ -75,7 +74,7 @@ function NetworkGraph({ processed_data, onNodeClick }) {
       .select(svgRef.current)
       // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計
       // -> 値が大きいほどグラフも大きくなる
-      .attr("viewBox", `0 0 500 440`)
+.attr("viewBox", `0 0 500 500`)
       .attr("preserveAspectRatio", "xMidYMid meet")
       .call(zoomInstance.current);
 
@@ -144,8 +143,7 @@ function NetworkGraph({ processed_data, onNodeClick }) {
           return d.id;
         })
       )
-      // ノードの距離を縮めたい
-      .force("charge", d3.forceManyBody(0).strength(-30))
+      .force("charge", d3.forceManyBody(0).strength(-100))
       .force("center", d3.forceCenter(250, 250));
 
     // シミュレーション
@@ -181,6 +179,20 @@ function NetworkGraph({ processed_data, onNodeClick }) {
       d3.select(svgRef.current).selectAll("*").remove();
     };
   }, [data]);
+// selectedNodeIdを持つノードを中心に移動
+  useEffect(() => {
+    if (!data || !selectedNodeId) return;
+    const selectedNode = data.nodes.find((node) => node.id === selectedNodeId);
+    if (selectedNode) {
+      const x = selectedNode.x;
+      const y = selectedNode.y;
+      const toCenter = d3.zoomIdentity.translate(250 - x, 250 - y);
+      d3.select(svgRef.current)
+        .transition()
+        .duration(750)
+        .call(zoomInstance.current.transform, toCenter);
+    }
+  }, [selectedNodeId, data]);
 
   return <svg ref={svgRef} className="network-graph"></svg>;
 }
