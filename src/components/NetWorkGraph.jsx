@@ -1,6 +1,32 @@
 import { useEffect, useState ,useRef} from "react";
 import * as d3 from 'd3';
 
+ useEffect(() => {
+    setData(processed_data);
+
+    if (!data) return;
+
+    // ノードクリックでonNodeClickを実行
+    const selectByNodeClick = (e, clickedNode) => {
+      onNodeClick(clickedNode.id);
+    };
+
+    // ノードクリックでノードを中心へ移動
+    const zoomByNodeClick = (e, clickedNode) => {
+      const x = clickedNode.x;
+      const y = clickedNode.y;
+
+      // ノードを中心へ移動
+      const toCenter = d3.zoomIdentity
+        .translate(250 - x * 2, 250 - y * 2)
+        .scale(2);
+      //クリックした時のzoomレベルをあげたい
+
+      svg
+        .transition()
+        .duration(750)
+        .call(zoomInstance.current.transform, toCenter);
+    };
 
 function NetworkGraph({processed_data,onNodeClick,selectedNodeId}) {
     const [data,setData] = useState(null);
@@ -135,7 +161,8 @@ function NetworkGraph({processed_data,onNodeClick,selectedNodeId}) {
           return d.id;
         })
       )
-      .force("charge", d3.forceManyBody(0).strength(-100))
+      // ノードの距離を縮めたい
+      .force("charge", d3.forceManyBody(0).strength(-30))
       .force("center", d3.forceCenter(250, 250));
 
     // シミュレーション
