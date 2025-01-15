@@ -8,7 +8,7 @@ import BookShelf from "./components/BookShelf";
 function App() {
   const [clickedNodeId, setClickedNodeId] = useState(null);
   // ノードクリックを感知して、idをclickedNodeIdにセット
-  const handleNodeClick = (newNodeId) => {
+  const handleSetNodeId = (newNodeId) => {
     setClickedNodeId(newNodeId);
   };
 
@@ -23,7 +23,7 @@ function App() {
         <div className="full-container">
           <div className="select-container">
             <h1>セレクトボタン</h1>
-            <SearchAndFilter processed_data={processed_data} />
+            <SearchAndFilter processed_data={processed_data} selectNode={handleSetNodeId} />
           </div>
           <div className="item-container">
             {/* item-styles.css適用箇所 */}
@@ -41,7 +41,8 @@ function App() {
             <div className="vis-container">
               <NetworkGraph
                 processed_data={processed_data}
-                onNodeClick={handleNodeClick}
+                onNodeClick={handleSetNodeId}
+                selectedNodeId={clickedNodeId}
               />
             </div>
             <div className="book-container">
