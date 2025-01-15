@@ -1,15 +1,17 @@
 body {
   height: 100%;
-
+  background: linear-gradient(to bottom, #7b7b79, #5a5a5a, #40403e) fixed;
   margin: 0;
   padding: 0;
 }
 
 .wrapper {
   height: 100%;
+  /* 文字の間隔を少し開けた */
+  letter-spacing: 0.03em;
 
-  padding-left: 15px;
-  padding-right: 15px;
+  /* padding-left: 15px;
+  padding-right: 15px; */
 
   display: flex;
   flex-direction: column;
@@ -23,7 +25,7 @@ header {
   /* 上下10px 左右0px */
   padding: 10px 0;
 
-  background-color: rgb(106, 240, 245);
+  background-color: #d1d2c8;
   text-align: center;
 
   box-sizing: border-box;

@@ -29,7 +29,6 @@ function App() {
             {/* item-styles.css適用箇所 */}
             <div className="info-list-container">
               <div className="info-container">
-                <h1>思想家の詳細</h1>
                 <Information
                   processed_data={processed_data}
                   nodeId={clickedNodeId}
