@@ -75,7 +75,7 @@ function NetworkGraph({ processed_data, onNodeClick }) {
       .select(svgRef.current)
       // viewBox(minx,miny,w,h) w,hは初期描画範囲の設計
       // -> 値が大きいほどグラフも大きくなる
-      .attr("viewBox", `0 0 500 500`)
+      .attr("viewBox", `0 0 500 440`)
       .attr("preserveAspectRatio", "xMidYMid meet")
       .call(zoomInstance.current);
 
