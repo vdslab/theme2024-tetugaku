@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 
-function SearchAndFilter({ processed_data }) {
+function SearchAndFilter({ processed_data, selectNode }) {
   const [searchName, setSearchName] = useState("");
-  const [selectedPhilosopher, setSelectedPhilosopher] = useState(null);
+  const [selectedPhilosopher, setSelectedPhilosopher] = useState({value:"",label:""});
   const [key, setKey] = useState(0); // 再レンダリング用のkeyを管理
 
   const options = processed_data.names.map((item) => ({
@@ -12,7 +12,7 @@ function SearchAndFilter({ processed_data }) {
   }));
 
   const handleSelectChange = (selectedOption) => {
-    setSelectedPhilosopher(selectedOption);
+    setSelectedPhilosopher(selectedOption ?? { value: "", label: "" });
     const newValue = selectedOption ? selectedOption.value : "";
     setSearchName(newValue);
 
@@ -20,8 +20,14 @@ function SearchAndFilter({ processed_data }) {
     setKey((prevKey) => prevKey + 1);
   };
 
-  const handleInputChange = (inputValue) => {
-    setSearchName(inputValue); // 入力中の値も管理する
+  const handleInputChange = (inputValue, { action }) => {
+    if (action === 'input-change') {
+      setSearchName(inputValue);
+    }
+    // inputValueが空欄になったが、メニューを閉じていない状態(文字を削除しただけの状態  )
+    if (action !== 'menu-close' && inputValue === '') {
+      setSelectedPhilosopher({value:"",label:""});  // 不要な場合はコメントアウト
+    }
   };
 
   const customStyles = {
@@ -39,6 +45,15 @@ function SearchAndFilter({ processed_data }) {
     }),
   };
 
+  useEffect(() => {
+    console.log(selectedPhilosopher.value);
+    processed_data.names.forEach(t => {
+      if (t.name === selectedPhilosopher.value) {
+        selectNode(t.name_id);
+      }
+    });
+  }, [selectedPhilosopher]);
+  
   return (
     <div>
       <Select
@@ -55,7 +70,6 @@ function SearchAndFilter({ processed_data }) {
         isClearable
         styles={customStyles}
       />
-      <p>選択された名前: {selectedPhilosopher ? selectedPhilosopher.value : "なし"}</p>
     </div>
   );
 }
