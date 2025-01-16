@@ -7,6 +7,10 @@
   color: #454545;
 }
 
+.p-4 {
+  text-align: center;
+}
+
 .information-content {
   padding: 0.3rem 1rem;
 }

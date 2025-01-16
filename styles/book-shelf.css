@@ -26,7 +26,6 @@
 
 /* 本棚のレイアウト */
 .book-shelf-container {
-  padding: 0.5rem;
   /* background-color: azure; */
   /* border: 1px solid #090909; */
   overflow-y: auto;
@@ -34,8 +33,8 @@
 
   /* height: 95%; */
   margin-top: 7px;
-  /* max-width: 100vw; 
-  max-height: 80vh; */
+  max-width: 100vw;
+  max-height: 80vh;
   /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); */
 }
 
