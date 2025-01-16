@@ -60,6 +60,7 @@ function App() {
                 processed_data={processed_data}
                 onNodeClick={handleSetNodeId}
                 selectedNodeId={clickedNodeId}
+                selectedGroupId={selectedGroupId}
               />
             </div>
             <div className="book-container">

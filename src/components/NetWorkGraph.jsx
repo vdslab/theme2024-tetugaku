@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 
-function NetworkGraph({ processed_data, onNodeClick, selectedNodeId }) {
+function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGroupId }) {
   const [data, setData] = useState(null);
   const svgRef = useRef(null);
 
@@ -35,8 +35,8 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId }) {
 
       // ノードを中心へ移動
       const toCenter = d3.zoomIdentity
-        .translate(250 - x * 2, 250 - y * 2)
-        .scale(2);
+      .translate(250 - x * 2, 250 - y * 2)
+      .scale(2);
 
       svg
         .transition()
@@ -179,6 +179,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId }) {
       d3.select(svgRef.current).selectAll("*").remove();
     };
   }, [data]);
+
   // selectedNodeIdを持つノードを中心に移動
   useEffect(() => {
     if (!data || !selectedNodeId) return;
@@ -193,6 +194,26 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId }) {
         .call(zoomInstance.current.transform, toCenter);
     }
   }, [selectedNodeId, data]);
+
+  // selectedGroupIdを持つノードの中心座標(平均)を計算して移動
+  useEffect(() => {
+    if (!data || !selectedGroupId) return;
+
+    // selectedGroupIdと一致するノードを抽出
+    const groupNodes = data.nodes.filter((node) => node.group === selectedGroupId);
+
+    // ノード群の x, y の平均(重心)を計算
+    const avgX = d3.mean(groupNodes, (d) => d.x);
+    const avgY = d3.mean(groupNodes, (d) => d.y);
+
+    // 重心に向けてズーム
+    const toCenter = d3.zoomIdentity.translate(250 - avgX, 250 - avgY).scale(1);
+
+    d3.select(svgRef.current)
+      .transition()
+      .duration(750)
+      .call(zoomInstance.current.transform, toCenter);
+  }, [selectedGroupId, data]);
 
   return <svg ref={svgRef} className="network-graph"></svg>;
 }
