@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 
-function SearchAndFilter({ processed_data, selectNode }) {
+function SearchAndFilter({ processed_data, selectNode, selectGroup }) {
   const [searchName, setSearchName] = useState("");
   const [selectedPhilosopher, setSelectedPhilosopher] = useState(null);
   const [key, setKey] = useState(0); // 再レンダリング用のkeyを管理
@@ -81,6 +81,7 @@ function SearchAndFilter({ processed_data, selectNode }) {
     }),
   };
 
+  // 選択した思想家のidを送信する処理の作成
   useEffect(() => {
     if(!selectedPhilosopher)return;
     processed_data.names.forEach(t => {
@@ -89,6 +90,12 @@ function SearchAndFilter({ processed_data, selectNode }) {
       }
     });
   }, [selectedPhilosopher]);
+
+  // 選択したグループのidを送信する処理の作成
+  useEffect(() => {
+    if(!selectedGroup)return;
+    selectGroup(selectedGroup.value)
+  },[selectedGroup])
 
   return (
     <>
