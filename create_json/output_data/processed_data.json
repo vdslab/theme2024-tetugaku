@@ -75,6 +75,50 @@
         {
             "name_id": 19,
             "name": "ヘーゲル"
+        },
+        {
+            "name_id": 20,
+            "name": "キルケゴール"
+        },
+        {
+            "name_id": 21,
+            "name": "マルクス"
+        },
+        {
+            "name_id": 22,
+            "name": "ニーチェ"
+        },
+        {
+            "name_id": 23,
+            "name": "ソシュール"
+        },
+        {
+            "name_id": 24,
+            "name": "デューイ"
+        },
+        {
+            "name_id": 25,
+            "name": "フッサール"
+        },
+        {
+            "name_id": 26,
+            "name": "ハイデガー"
+        },
+        {
+            "name_id": 27,
+            "name": "サルトル"
+        },
+        {
+            "name_id": 28,
+            "name": "レヴィナス"
+        },
+        {
+            "name_id": 29,
+            "name": "レヴィ=ストロース"
+        },
+        {
+            "name_id": 30,
+            "name": "デリダ"
         }
     ],
     "nodes": [
@@ -191,6 +235,72 @@
             "group": 102,
             "group_name": "近代",
             "information": "aa"
+        },
+        {
+            "id": 20,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
+        },
+        {
+            "id": 21,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
+        },
+        {
+            "id": 22,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
+        },
+        {
+            "id": 23,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
+        },
+        {
+            "id": 24,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
+        },
+        {
+            "id": 25,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
+        },
+        {
+            "id": 26,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
+        },
+        {
+            "id": 27,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
+        },
+        {
+            "id": 28,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
+        },
+        {
+            "id": 29,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
+        },
+        {
+            "id": 30,
+            "group": 103,
+            "group_name": "現代",
+            "information": "AA"
         }
     ],
     "links": [
@@ -303,6 +413,21 @@
             "source": 19,
             "target": 6,
             "relation_id": "U"
+        },
+        {
+            "source": 20,
+            "target": 19,
+            "relation_id": "N"
+        },
+        {
+            "source": 20,
+            "target": 4,
+            "relation_id": "A"
+        },
+        {
+            "source": 21,
+            "target": 17,
+            "relation_id": "N"
         }
     ],
     "keywords": [
@@ -508,6 +633,94 @@
         },
         {
             "name_id": 19,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 20,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 20,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 21,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 21,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 22,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 22,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 23,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 23,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 24,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 24,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 25,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 25,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 26,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 26,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 27,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 27,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 28,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 28,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 29,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 29,
+            "keyword": "BB"
+        },
+        {
+            "name_id": 30,
+            "keyword": "AA"
+        },
+        {
+            "name_id": 30,
             "keyword": "BB"
         }
     ],
