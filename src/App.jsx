@@ -22,30 +22,40 @@ function App() {
   // レンダリング処理の完了を示すフラグを立てる
   const handleRenderComplete = () => {
     setRenderComplete(true);
-  }
+  };
 
   // 思想家の初期表示をプラトンに設定
   useEffect(() => {
     setClickedNodeId(5);
-  },[])
+  }, []);
   return (
     <div className="wrapper">
       {/* wrapper-styles.css適用箇所 */}
       <header>
-        <h1>哲学思想ネットワーク</h1>
+        <div className="header-title">
+          <h1>哲学思想ネットワーク</h1>
+        </div>
+        <div className="header-controls">
+          <SearchAndFilter
+            processed_data={processed_data}
+            selectNode={handleSetNodeId}
+            selectGroup={handleSetGroupId}
+            renderComplete={renderComplete}
+          />
+        </div>
       </header>
       <main>
         {/* main-styles.css適用箇所 */}
         <div className="full-container">
-          <div className="select-container">
-            {/* <h1>セレクトボタン</h1> */}
-            <SearchAndFilter
+          {/* <div className="select-container"> */}
+          {/* <h1>セレクトボタン</h1> */}
+          {/* <SearchAndFilter
               processed_data={processed_data}
               selectNode={handleSetNodeId}
               selectGroup={handleSetGroupId}
               renderComplete={renderComplete}
-            />
-          </div>
+            /> */}
+          {/* </div> */}
           <div className="item-container">
             {/* item-styles.css適用箇所 */}
             <div className="info-list-container">

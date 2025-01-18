@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
+import "./SearchAndFilter.css";
 
-function SearchAndFilter({ processed_data, selectNode, selectGroup, renderComplete }) {
+function SearchAndFilter({
+  processed_data,
+  selectNode,
+  selectGroup,
+  renderComplete,
+}) {
   const [searchName, setSearchName] = useState("");
   const [selectedPhilosopher, setSelectedPhilosopher] = useState(null);
   const [key, setKey] = useState(0); // 再レンダリング用のkeyを管理
@@ -20,27 +26,26 @@ function SearchAndFilter({ processed_data, selectNode, selectGroup, renderComple
       setSelectedPhilosopher(selectedOption);
       setSearchName(selectedOption.value);
     } else {
-      setSelectedPhilosopher(null);  // 選択解除
-      setSearchName("");             // プレースホルダーを表示させるために空文字を設定
+      setSelectedPhilosopher(null); // 選択解除
+      setSearchName(""); // プレースホルダーを表示させるために空文字を設定
     }
     // 再レンダリングを強制するためにkeyを更新
     setKey((prevKey) => prevKey + 1);
   };
 
   const handleInputChange = (inputValue, { action }) => {
-    if (action === 'input-change') {
+    if (action === "input-change") {
       setSearchName(inputValue);
     }
     // inputValueが空欄になったが、メニューを閉じていない状態(文字を削除しただけの状態)
-    if (action !== 'menu-close' && inputValue === '') {
-      setSelectedPhilosopher(null);  // 不要な場合はコメントアウト  
+    if (action !== "menu-close" && inputValue === "") {
+      setSelectedPhilosopher(null); // 不要な場合はコメントアウト
     }
     // メニューを閉じた時に選択がなければプレースホルダーを表示する
     if (action === "menu-close" && !selectedPhilosopher) {
       setSearchName(""); // プレースホルダーの表示用に入力欄を空にする
     }
   };
-
 
   //グループ選択用オプション
   const groupMap = new Map();
@@ -83,8 +88,8 @@ function SearchAndFilter({ processed_data, selectNode, selectGroup, renderComple
 
   // 選択した思想家のidを送信する処理の作成
   useEffect(() => {
-    if(!selectedPhilosopher)return;
-    processed_data.names.forEach(t => {
+    if (!selectedPhilosopher) return;
+    processed_data.names.forEach((t) => {
       if (t.name === selectedPhilosopher.value) {
         selectNode(t.name_id);
       }
@@ -93,40 +98,42 @@ function SearchAndFilter({ processed_data, selectNode, selectGroup, renderComple
 
   // 選択したグループのidを送信する処理の作成
   useEffect(() => {
-    if(!selectedGroup)return;
-    selectGroup(selectedGroup.value)
-  },[selectedGroup])
+    if (!selectedGroup) return;
+    selectGroup(selectedGroup.value);
+  }, [selectedGroup]);
 
   return (
     <>
       {/* 思想家を選択 */}
-      <div>
-        <Select
-          // keyを変更して再マウント
-          key={key}
-          options={options}
-          value={selectedPhilosopher}
-          onChange={handleSelectChange}
-          onInputChange={handleInputChange}
-          inputValue={searchName}
-          placeholder="思想家を選んでください"
-          isClearable
-          styles={customStyles}
-          isDisabled={!renderComplete}
-        />
-      </div>
+      <div className="select-container">
+        <div>
+          <Select
+            // keyを変更して再マウント
+            key={key}
+            options={options}
+            value={selectedPhilosopher}
+            onChange={handleSelectChange}
+            onInputChange={handleInputChange}
+            inputValue={searchName}
+            placeholder="思想家を選んでください"
+            isClearable
+            styles={customStyles}
+            isDisabled={!renderComplete}
+          />
+        </div>
 
-      {/* グループを選択 */}
-      <div>
-        <Select
-          options={groupOptions}
-          value={selectedGroup}
-          onChange={handleGroupChange}
-          placeholder="グループを選んでください"
-          isClearable
-          isSearchable={false}
-          styles={customStyles}
-        />
+        {/* グループを選択 */}
+        <div>
+          <Select
+            options={groupOptions}
+            value={selectedGroup}
+            onChange={handleGroupChange}
+            placeholder="グループを選んでください"
+            isClearable
+            isSearchable={false}
+            styles={customStyles}
+          />
+        </div>
       </div>
     </>
   );
