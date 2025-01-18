@@ -4,7 +4,7 @@ import * as d3 from "d3";
 function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGroupId }) {
   const [data, setData] = useState(null);
   const svgRef = useRef(null);
-
+  const [initialMount,setInitialMount] = useState(true);
   // useRefにズーム用インスタンスを保存
   const zoomInstance = useRef(
     d3.zoom().on("zoom", (event) => {
@@ -37,6 +37,10 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       const toCenter = d3.zoomIdentity
       .translate(250 - x * 2, 250 - y * 2)
       .scale(2);
+
+      // プラトンの初期座標値はここで取得
+      console.log(x);
+      console.log(y);
 
       svg
         .transition()
@@ -158,6 +162,14 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       labels.attr("x", (d) => d.x).attr("y", (d) => d.y);
     });
 
+    // 初期描画が終了したタイミングでinitialMountflagをおろす
+    simulation.on("end",() => {
+      setInitialMount(false)
+      handleRenderComplete();
+    })
+
+    // todo 初期描画が終了するまでセレクトボタンを使用できなくする
+
     // 隣接リストの作成
     nearestNodeList.current = {};
     data.nodes.forEach((node) => {
@@ -182,7 +194,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
 
   // selectedNodeIdを持つノードを中心に移動
   useEffect(() => {
-    if (!data || !selectedNodeId) return;
+    if (initialMount || !data || !selectedNodeId) return;
     const selectedNode = data.nodes.find((node) => node.id === selectedNodeId);
     if (selectedNode) {
       const x = selectedNode.x;
@@ -214,6 +226,17 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .duration(750)
       .call(zoomInstance.current.transform, toCenter);
   }, [selectedGroupId, data]);
+
+  // プラトンの座標を初期値として登録
+  useEffect(() => {
+    const x = 323.9262121518633;
+    const y = 169.9527236526979;
+    const toCenter = d3.zoomIdentity.translate(250 - x, 250 - y);
+    d3.select(svgRef.current)
+      .transition()
+      .duration(750)
+      .call(zoomInstance.current.transform, toCenter);
+  },[])
 
   return <svg ref={svgRef} className="network-graph"></svg>;
 }
