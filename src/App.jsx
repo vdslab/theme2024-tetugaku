@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NetworkGraph from "./components/NetWorkGraph";
 import Information from "./components/Information";
 import SearchAndFilter from "./components/SearchAndFilter";
@@ -12,6 +12,14 @@ function App() {
   const handleSetNodeId = (newNodeId) => {
     setClickedNodeId(newNodeId);
   };
+
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
+  const handleSetGroupId = (newGroupId) => {
+    setSelectedGroupId(newGroupId);
+  };
+  useEffect(()=> {
+    console.log(selectedGroupId)
+  },[selectedGroupId])
 
   return (
     <div className="wrapper">
@@ -27,6 +35,7 @@ function App() {
             <SearchAndFilter
               processed_data={processed_data}
               selectNode={handleSetNodeId}
+              selectGroup={handleSetGroupId}
             />
           </div>
           <div className="item-container">
@@ -51,6 +60,7 @@ function App() {
                 processed_data={processed_data}
                 onNodeClick={handleSetNodeId}
                 selectedNodeId={clickedNodeId}
+                selectedGroupId={selectedGroupId}
               />
             </div>
             <div className="book-container">
