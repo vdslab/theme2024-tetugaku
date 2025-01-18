@@ -8,15 +8,21 @@ import SelectNode from "./components/SelectNode";
 
 function App() {
   const [clickedNodeId, setClickedNodeId] = useState(null);
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
+  const [renderComplete, setRenderComplete] = useState(null);
   // ノードクリックを感知して、idをclickedNodeIdにセット
   const handleSetNodeId = (newNodeId) => {
     setClickedNodeId(newNodeId);
   };
 
-  const [selectedGroupId, setSelectedGroupId] = useState(null);
   const handleSetGroupId = (newGroupId) => {
     setSelectedGroupId(newGroupId);
   };
+
+  // レンダリング処理の完了を示すフラグを立てる
+  const handleRenderComplete = () => {
+    setRenderComplete(true);
+  }
 
   // 思想家の初期表示をプラトンに設定
   useEffect(() => {
@@ -37,6 +43,7 @@ function App() {
               processed_data={processed_data}
               selectNode={handleSetNodeId}
               selectGroup={handleSetGroupId}
+              renderComplete={renderComplete}
             />
           </div>
           <div className="item-container">
@@ -62,6 +69,7 @@ function App() {
                 onNodeClick={handleSetNodeId}
                 selectedNodeId={clickedNodeId}
                 selectedGroupId={selectedGroupId}
+                handleRenderComplete={handleRenderComplete}
               />
             </div>
             <div className="book-container">

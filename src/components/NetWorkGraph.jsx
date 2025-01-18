@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 
-function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGroupId }) {
+function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGroupId, handleRenderComplete }) {
   const [data, setData] = useState(null);
   const svgRef = useRef(null);
   const [initialMount,setInitialMount] = useState(true);
@@ -41,7 +41,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       // プラトンの初期座標値はここで取得
       console.log(x);
       console.log(y);
-
+      
       svg
         .transition()
         .duration(750)

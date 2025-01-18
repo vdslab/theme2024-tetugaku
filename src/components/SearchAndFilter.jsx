@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 
-function SearchAndFilter({ processed_data, selectNode, selectGroup }) {
+function SearchAndFilter({ processed_data, selectNode, selectGroup, renderComplete }) {
   const [searchName, setSearchName] = useState("");
   const [selectedPhilosopher, setSelectedPhilosopher] = useState(null);
   const [key, setKey] = useState(0); // 再レンダリング用のkeyを管理
@@ -112,6 +112,7 @@ function SearchAndFilter({ processed_data, selectNode, selectGroup }) {
           placeholder="思想家を選んでください"
           isClearable
           styles={customStyles}
+          isDisabled={!renderComplete}
         />
       </div>
 
