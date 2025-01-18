@@ -15,7 +15,7 @@
 }
 
 .list-container {
-  height: 58%;
+  height: calc(60% - 10px);
   margin-top: 10px;
   overflow-y: auto;
   border-radius: 4px;
@@ -26,9 +26,10 @@
   height: 100%;
   width: 45%;
   margin-top: 10px;
-  border: 1px solid #090909;
+  /* border: 1px solid #090909;
   outline: 1px solid #090909;
-  outline-offset: 2px;
+  outline-offset: 2px; */
+  box-shadow: 0 0 10px #00000040;
   overflow-y: auto;
   border-radius: 4px;
   box-sizing: border-box;
