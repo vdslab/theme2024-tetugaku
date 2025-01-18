@@ -1,3 +1,11 @@
+html {
+  height: 100%;
+}
+
+body > #content {
+  height: 100%;
+}
+
 body {
   height: 100%;
   /* background: linear-gradient(to bottom, #7b7b79, #5a5a5a, #40403e) fixed; */
@@ -24,14 +32,33 @@ header {
   width: 100%;
 
   /* 上下10px 左右0px */
-  padding: 10px 0;
+  /* padding: 10px 0px; */
 
   background-color: #d1d2c8;
-  text-align: center;
-
+  /* text-align: center; */
+  display: flex;
+  align-items: center;
   box-sizing: border-box;
 }
 
 main {
   height: 93%;
+}
+
+.header-title {
+  flex: 0 auto;
+  /* flex: 0 1 auto; */
+  padding-left: 30px;
+}
+
+.heder-title h1 {
+  /* margin-right: 10px; */
+  text-align: left;
+}
+
+.header-controls {
+  flex: 1;
+  display: flex;
+  justify-content: right;
+  gap: 20px;
 }
