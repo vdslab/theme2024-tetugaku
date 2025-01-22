@@ -7,9 +7,9 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   const [initialMount,setInitialMount] = useState(true);
   const linkRef = useRef(null);
 
-  const [stateA,setStateA] = useState(false);
-  const [stateB,setStateB] = useState(false);
-  const [stateC,setStateC] = useState(false);
+  const [stateM,setStateM] = useState(false);
+  const [stateN,setStateN] = useState(false);
+  const [stateU,setStateU] = useState(false);
 
   // todo できればiroCd(変更していい)を使ってまとめたい
   const iroCd = [
@@ -20,13 +20,13 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
 
   // デバッグ用
   function handleClickA(){
-    setStateA(!stateA);
+    setStateM(!stateM);
   }  
   function handleClickB(){
-    setStateB(!stateB);
+    setStateN(!stateN);
   }
   function handleClickC(){
-    setStateC(!stateC);
+    setStateU(!stateU);
   }
   // 隣接リストの準備
   const nearestNodeList = useRef({});
@@ -105,6 +105,24 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .attr("viewBox", `0 0 500 440`)
       .attr("preserveAspectRatio", "xMidYMid meet")
       .call(zoomInstance.current);
+
+      const defs = svg.append("defs");
+  defs
+    .selectAll("marker")
+    .data(['M','N','U'])
+    .enter()
+    .append("marker")
+    .attr("id", (d) => `arrow-${d}`)
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 10)
+    .attr("refY", 5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M0,0 L0,10 L10,5 Z")
+    .attr("fill", (d) => iroCd[d]);
+
 
     const svgGroup = svg.append("g").attr("class", "main-group");
 
@@ -263,32 +281,49 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .call(zoomInstance.current.transform, toCenter);
   },[])
 
+  // relation_idに応じてエッジとマーカーの色を変更する処理
   useEffect(() => {
     if (initialMount) return;
-  
-    // relation_idの取得
-    console.log(linkRef.current.nodes()[0].__data__.relation_id);
-  
+
     linkRef.current.nodes().forEach((t) => {
-      // デフォルトの色
+      // デフォルトの色とマーカー
       let strokeColor = "black";
-      
-      // Aの色
-      if (stateA && t.__data__.relation_id === "M") {
+      let markerEnd = null;
+
+      // Aの色とマーカー
+      if (stateM && t.__data__.relation_id === "M") {
         strokeColor = "red";
+        markerEnd = `url(#arrow-M)`;
       }
-      // Bの色
-      if (stateB && t.__data__.relation_id === "N") {
+      // Bの色とマーカー
+      if (stateN && t.__data__.relation_id === "N") {
         strokeColor = "blue";
+        markerEnd = `url(#arrow-N)`;
       }
-      // Cの色
-      if (stateC && t.__data__.relation_id === "U") {
+      // Cの色とマーカー
+      if (stateU && t.__data__.relation_id === "U") {
         strokeColor = "green";
+        markerEnd = `url(#arrow-U)`;
       }
 
-      d3.select(t).attr("stroke",strokeColor);
-    })
-  },[stateA,stateB,stateC]);
+      // マーカー削除
+      if (!stateM && t.__data__.relation_id === "M") {
+        markerEnd = null;
+      }
+      if (!stateN && t.__data__.relation_id === "N") {
+        markerEnd = null;
+      }
+      if (!stateU && t.__data__.relation_id === "U") {
+        markerEnd = null;
+      }
+
+      // エッジのスタイルを更新
+      d3.select(t)
+        .attr("stroke", strokeColor)
+        .attr("marker-end", markerEnd);
+    });
+  }, [stateM, stateN, stateU]);
+
 
 
   return (
