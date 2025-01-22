@@ -5,6 +5,18 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   const [data, setData] = useState(null);
   const svgRef = useRef(null);
   const [initialMount,setInitialMount] = useState(true);
+  const linkRef = useRef(null);
+
+  const [stateA,setStateA] = useState(false);
+  const [stateB,setStateB] = useState(false);
+  const [stateC,setStateC] = useState(false);
+
+  const iroCd = [
+    {'M':"red"},
+    {'N':"blue"},
+    {'U':"green"}
+  ]
+
   // 隣接リストの準備
   const nearestNodeList = useRef({});
 
@@ -138,6 +150,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         const nameObj = data.names?.find((n) => n.name_id === d.id);
         return nameObj ? nameObj.name : d.id;
       });
+      linkRef.current = link;
 
     // シミュレーション設定
     const simulation = d3
