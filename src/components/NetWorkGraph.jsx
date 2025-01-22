@@ -5,6 +5,9 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   const [data, setData] = useState(null);
   const svgRef = useRef(null);
   const [initialMount,setInitialMount] = useState(true);
+  // 隣接リストの準備
+  const nearestNodeList = useRef({});
+
   // useRefにズーム用インスタンスを保存
   const zoomInstance = useRef(
     d3.zoom().on("zoom", (event) => {
@@ -15,9 +18,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     })
   );
 
-  // 隣接リストの準備
-  const nearestNodeList = useRef({});
-
+  // グラフの描画
   useEffect(() => {
     setData(processed_data);
 
