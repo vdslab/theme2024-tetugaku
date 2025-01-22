@@ -19,12 +19,15 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   ]
 
   // デバッグ用
-  function handleClick(){
+  function handleClickA(){
     setStateA(!stateA);
+  }  
+  function handleClickB(){
     setStateB(!stateB);
+  }
+  function handleClickC(){
     setStateC(!stateC);
   }
-
   // 隣接リストの準備
   const nearestNodeList = useRef({});
 
@@ -261,49 +264,38 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   },[])
 
   useEffect(() => {
-    if(initialMount)return;
+    if (initialMount) return;
+  
     // relation_idの取得
     console.log(linkRef.current.nodes()[0].__data__.relation_id);
-    console.log(stateA)
-    if(stateA){
-      linkRef.current.nodes().forEach((t) => {
-        if(t.__data__.relation_id === 'M'){
-          console.log("A")
-          d3.select(t).attr("stroke","red");
-        }
-      })
-    }else{
-      linkRef.current.nodes().forEach((t) => {
-        d3.select(t).attr("stroke","black");
-      })
-    }
-    if(stateB){
-      linkRef.current.nodes().forEach((t) => {
-        if(t.__data__.relation_id === 'N'){
-          d3.select(t).attr("stroke","blue");
-        }
-      })
-    }else{
-      linkRef.current.nodes().forEach((t) => {
-        d3.select(t).attr("stroke","black");
-      })
-    }
-    if(stateC){
-      linkRef.current.nodes().forEach((t) => {
-        if(t.__data__.relation_id === 'U'){
-          d3.select(t).attr("stroke","green");
-        }
-      })
-    }else{
-      linkRef.current.nodes().forEach((t) => {
-        d3.select(t).attr("stroke","black");
-      })
-    }
-  },[stateA,stateB,stateC])
+  
+    linkRef.current.nodes().forEach((t) => {
+      // デフォルトの色
+      let strokeColor = "black";
+      
+      // Aの色
+      if (stateA && t.__data__.relation_id === "M") {
+        strokeColor = "red";
+      }
+      // Bの色
+      if (stateB && t.__data__.relation_id === "N") {
+        strokeColor = "blue";
+      }
+      // Cの色
+      if (stateC && t.__data__.relation_id === "U") {
+        strokeColor = "green";
+      }
+
+      d3.select(t).attr("stroke",strokeColor);
+    })
+  },[stateA,stateB,stateC]);
+
 
   return (
     <>
-      <button onClick={handleClick}>切り替え</button>
+      <button onClick={handleClickA}>切り替えA</button>
+      <button onClick={handleClickB}>切り替えB</button>
+      <button onClick={handleClickC}>切り替えC</button>
       <svg ref={svgRef} className="network-graph"></svg>
     </>
   );
