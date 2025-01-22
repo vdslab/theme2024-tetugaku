@@ -11,11 +11,19 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   const [stateB,setStateB] = useState(false);
   const [stateC,setStateC] = useState(false);
 
+  // todo できればiroCd(変更していい)を使ってまとめたい
   const iroCd = [
     {'M':"red"},
     {'N':"blue"},
     {'U':"green"}
   ]
+
+  // デバッグ用
+  function handleClick(){
+    setStateA(!stateA);
+    setStateB(!stateB);
+    setStateC(!stateC);
+  }
 
   // 隣接リストの準備
   const nearestNodeList = useRef({});
@@ -252,7 +260,53 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .call(zoomInstance.current.transform, toCenter);
   },[])
 
-  return <svg ref={svgRef} className="network-graph"></svg>;
+  useEffect(() => {
+    if(initialMount)return;
+    // relation_idの取得
+    console.log(linkRef.current.nodes()[0].__data__.relation_id);
+    console.log(stateA)
+    if(stateA){
+      linkRef.current.nodes().forEach((t) => {
+        if(t.__data__.relation_id === 'M'){
+          console.log("A")
+          d3.select(t).attr("stroke","red");
+        }
+      })
+    }else{
+      linkRef.current.nodes().forEach((t) => {
+        d3.select(t).attr("stroke","black");
+      })
+    }
+    if(stateB){
+      linkRef.current.nodes().forEach((t) => {
+        if(t.__data__.relation_id === 'N'){
+          d3.select(t).attr("stroke","blue");
+        }
+      })
+    }else{
+      linkRef.current.nodes().forEach((t) => {
+        d3.select(t).attr("stroke","black");
+      })
+    }
+    if(stateC){
+      linkRef.current.nodes().forEach((t) => {
+        if(t.__data__.relation_id === 'U'){
+          d3.select(t).attr("stroke","green");
+        }
+      })
+    }else{
+      linkRef.current.nodes().forEach((t) => {
+        d3.select(t).attr("stroke","black");
+      })
+    }
+  },[stateA,stateB,stateC])
+
+  return (
+    <>
+      <button onClick={handleClick}>切り替え</button>
+      <svg ref={svgRef} className="network-graph"></svg>
+    </>
+  );
 }
 
 export default NetworkGraph;
