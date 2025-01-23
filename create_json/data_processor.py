@@ -30,6 +30,7 @@ def process_json(data,file):
         book_ids = ast.literal_eval(row_dict["books"])
         target_ids = ast.literal_eval(row_dict["target_id"])
         relations = ast.literal_eval(row_dict["relations"])
+        relations_info = ast.literal_eval(row_dict["relations_info"])
 
         # 文字列を数値に変換
         name_id = int(row_dict["name_id"])
@@ -61,7 +62,8 @@ def process_json(data,file):
             {
                 "source" : name_id,
                 "target" : fixed_targets_ids[i],
-                "relation_id" : relations[i]
+                "relation_id" : relations[i],
+                "relation_info":relations_info[i]
             }
             for i in range(len(fixed_targets_ids))
         ])
