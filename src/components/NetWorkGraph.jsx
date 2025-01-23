@@ -106,13 +106,17 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .call(zoomInstance.current);
 
     const defs = svg.append("defs");
-    
+    console.log("#aaaa")
     defs
       .selectAll("marker")
-      .data(['M','N','U'])
+      .data(data.links)
       .enter()
       .append("marker")
-      .attr("id", (d) => `arrow-${d}`)
+      .attr("id", (d,i) => {
+        console.log(i)
+        return (
+        `arrow-${i}`
+      )})
       .attr("viewBox", "0 0 10 10")
       .attr("refX", 21)
       .attr("refY", 5)
@@ -121,7 +125,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .attr("orient", "auto")
       .append("path")
       .attr("d", "M0,0 L0,10 L10,5 Z")
-      .attr("fill", (d) => iroCd[d]);
+      .attr("fill", (d) => iroCd[d.relation_id]);
 
     const svgGroup = svg.append("g").attr("class", "main-group");
 
@@ -284,7 +288,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   useEffect(() => {
     if (initialMount) return;
 
-    linkRef.current.nodes().forEach((t) => {
+    linkRef.current.nodes().forEach((t,i) => {
       // デフォルトの色とマーカー
       let strokeColor = "black";
       let markerEnd = null;
@@ -292,17 +296,17 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       // Aの色とマーカー
       if (stateM && t.__data__.relation_id === "M") {
         strokeColor = "red";
-        markerEnd = `url(#arrow-${t.__data__.relation_id})`;
+        markerEnd = `url(#arrow-${i})`;
       }
       // Bの色とマーカー
       if (stateN && t.__data__.relation_id === "N") {
         strokeColor = "blue";
-        markerEnd = `url(#arrow-${t.__data__.relation_id})`;
+        markerEnd = `url(#arrow-${i})`;
       }
       // Cの色とマーカー
       if (stateU && t.__data__.relation_id === "U") {
         strokeColor = "green";
-        markerEnd = `url(#arrow-${t.__data__.relation_id})`;
+        markerEnd = `url(#arrow-${i})`;
       }
 
       // マーカー削除
@@ -312,7 +316,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       if (!stateN && t.__data__.relation_id === "N") {
         markerEnd = null;
       }
-      if (!stateU && t.__data__.relation_id === "U") {
+      if (!stateU && t.__data__.relation_id === "U") { 
         markerEnd = null;
       }
 
