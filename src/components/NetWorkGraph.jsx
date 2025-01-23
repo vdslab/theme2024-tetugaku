@@ -12,12 +12,11 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   const [stateU,setStateU] = useState(false);
 
   // todo できればiroCd(変更していい)を使ってまとめたい
-  const iroCd = [
-    {'M':"red"},
-    {'N':"blue"},
-    {'U':"green"}
-  ]
-
+  const iroCd = {
+    'M':"red",
+    'N':"blue",
+    'U':"green"
+  }
   // デバッグ用
   function handleClickA(){
     setStateM(!stateM);
@@ -106,23 +105,23 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .attr("preserveAspectRatio", "xMidYMid meet")
       .call(zoomInstance.current);
 
-      const defs = svg.append("defs");
-  defs
-    .selectAll("marker")
-    .data(['M','N','U'])
-    .enter()
-    .append("marker")
-    .attr("id", (d) => `arrow-${d}`)
-    .attr("viewBox", "0 0 10 10")
-    .attr("refX", 10)
-    .attr("refY", 5)
-    .attr("markerWidth", 6)
-    .attr("markerHeight", 6)
-    .attr("orient", "auto")
-    .append("path")
-    .attr("d", "M0,0 L0,10 L10,5 Z")
-    .attr("fill", (d) => iroCd[d]);
-
+    const defs = svg.append("defs");
+    
+    defs
+      .selectAll("marker")
+      .data(['M','N','U'])
+      .enter()
+      .append("marker")
+      .attr("id", (d) => `arrow-${d}`)
+      .attr("viewBox", "0 0 10 10")
+      .attr("refX", 21)
+      .attr("refY", 5)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M0,0 L0,10 L10,5 Z")
+      .attr("fill", (d) => iroCd[d]);
 
     const svgGroup = svg.append("g").attr("class", "main-group");
 
@@ -293,17 +292,17 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       // Aの色とマーカー
       if (stateM && t.__data__.relation_id === "M") {
         strokeColor = "red";
-        markerEnd = `url(#arrow-M)`;
+        markerEnd = `url(#arrow-${t.__data__.relation_id})`;
       }
       // Bの色とマーカー
       if (stateN && t.__data__.relation_id === "N") {
         strokeColor = "blue";
-        markerEnd = `url(#arrow-N)`;
+        markerEnd = `url(#arrow-${t.__data__.relation_id})`;
       }
       // Cの色とマーカー
       if (stateU && t.__data__.relation_id === "U") {
         strokeColor = "green";
-        markerEnd = `url(#arrow-U)`;
+        markerEnd = `url(#arrow-${t.__data__.relation_id})`;
       }
 
       // マーカー削除
