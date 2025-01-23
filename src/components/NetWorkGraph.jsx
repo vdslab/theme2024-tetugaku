@@ -74,14 +74,12 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     // ノードクリックでノードとエッジをハイライト表示
     const highlightByNodeClick = (e, clickedNode) => {
       const nearests = nearestNodeList.current[clickedNode.id];
-
       node
         .transition()
         .duration(300)
         .attr("fill-opacity", (d) => {
           return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.5;
         });
-
       link
         .transition()
         .duration(300)
@@ -90,10 +88,17 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
             typeof l.source === "object" ? l.source.id : l.source;
           const targetId =
             typeof l.target === "object" ? l.target.id : l.target;
-
-          return sourceId === clickedNode.id || targetId === clickedNode.id
-            ? 1
-            : 0.1;
+  
+          const isHighlighted =
+            sourceId === clickedNode.id || targetId === clickedNode.id;
+  
+          // マーカーの透明度を更新
+          d3.select(`#arrow-${l.index} path`)
+            .transition()
+            .duration(300)
+            .attr("opacity", isHighlighted ? 1 : 0.1);
+  
+          return isHighlighted ? 1 : 0.1;
         });
     };
 
