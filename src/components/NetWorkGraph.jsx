@@ -48,7 +48,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .transition()
       .duration(300)
       .attr("fill-opacity", (d) => {
-        return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.5;
+        return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.05;
       });
     linkRef.current
       .transition()
@@ -66,9 +66,9 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         d3.select(`#arrow-${l.index} path`)
           .transition()
           .duration(300)
-          .attr("opacity", isHighlighted ? 1 : 0.1);
+          .attr("opacity", isHighlighted ? 1 : 0.05);
 
-        return isHighlighted ? 1 : 0.1;
+        return isHighlighted ? 1 : 0.05;
       });
   };
 
@@ -125,14 +125,16 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         `arrow-${i}`
       )})
       .attr("viewBox", "0 0 10 10")
-      .attr("refX", 21)
+      .attr("refX", 10)
       .attr("refY", 5)
       .attr("markerWidth", 6)
       .attr("markerHeight", 6)
       .attr("orient", "auto")
       .append("path")
       .attr("d", "M0,0 L0,10 L10,5 Z")
+      .transition().duration(300)
       .attr("fill", (d) => iroCd[d.relation_id]);
+      
 
     const svgGroup = svg.append("g").attr("class", "main-group");
 
@@ -155,7 +157,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         return Math.sqrt(d.value);
       })
       .attr("stroke", "black")
-      .attr("stroke-opacity", 0.6);
+      .attr("stroke-opacity", 0.05)
 
     // ノードの描画
     const node = svgGroup
@@ -169,6 +171,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .attr("fill", function (d) {
         return color(d.group);
       })
+      .attr("fill-opacity", 0.05)
       .on("click.select", selectByNodeClick)
       .on("click.zoom", zoomByNodeClick)
       .on("mouseover.highlight", highlightByNodeClick);
@@ -208,10 +211,34 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     // シミュレーション
     simulation.on("tick", () => {
       link
-        .attr("x1", (d) => d.source.x)
-        .attr("y1", (d) => d.source.y)
-        .attr("x2", (d) => d.target.x)
-        .attr("y2", (d) => d.target.y);
+      .attr("x1", (d) => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const offset = 6.5; // 短くする長さ（仮）
+        return d.source.x + (dx / dist) * offset;
+      })
+      .attr("y1", (d) => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const offset = 6.5;
+        return d.source.y + (dy / dist) * offset;
+      })
+      .attr("x2", (d) => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const offset = 6.5;
+        return d.target.x - (dx / dist) * offset;
+      })
+      .attr("y2", (d) => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const offset = 6.5;
+        return d.target.y - (dy / dist) * offset;
+      });
       node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 
       labels.attr("x", (d) => d.x).attr("y", (d) => d.y);
@@ -308,8 +335,8 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     
     // state変更時、nodeのopacityを初期化 
     nodeRef.current.nodes().forEach((t,i) => {
-      d3.select(t).attr("fill-opacity",0.1);
-    })
+      d3.select(t).transition().duration(300).attr("fill-opacity", 0.05);
+    });
 
     linkRef.current.nodes().forEach((t,i) => {
       let strokeColor = "black";
@@ -327,7 +354,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         nodeRef.current.nodes().forEach((t2,i) => {
           console.log(t.__data__.source.id)
           if(t2.__data__.id === t.__data__.source.id || t2.__data__.id === t.__data__.target.id){
-            d3.select(t2).attr("fill-opacity",1);
+            d3.select(t2).transition().duration(300).attr("fill-opacity",1);
           }
         })
       } 
@@ -341,7 +368,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         nodeRef.current.nodes().forEach((t2,i) => {
           console.log(t2.__data__)
           if(t2.__data__.id == t.__data__.source.id || t2.__data__.id == t.__data__.target.id){
-            d3.select(t2).attr("fill-opacity",1);
+            d3.select(t2).transition().duration(300).attr("fill-opacity",1);
           }
         })
       } 
@@ -355,7 +382,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         nodeRef.current.nodes().forEach((t2,i) => {
           console.log(t2.__data__)
           if(t2.__data__.id == t.__data__.source.id || t2.__data__.id == t.__data__.target.id){
-            d3.select(t2).attr("fill-opacity",1);
+            d3.select(t2).transition().duration(300).attr("fill-opacity",1);
           }
         })
       }
