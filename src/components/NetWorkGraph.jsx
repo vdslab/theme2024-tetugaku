@@ -8,6 +8,9 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   const linkRef = useRef(null);
   const nodeRef = useRef(null);
 
+  // 有向エッジの集合
+  const activeLinkIndicesRef = useRef(new Set()); 
+
   const [stateM,setStateM] = useState(false);
   const [stateN,setStateN] = useState(false);
   const [stateU,setStateU] = useState(false);
@@ -66,7 +69,9 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         d3.select(`#arrow-${l.index} path`)
           .transition()
           .duration(300)
-          .attr("opacity", isHighlighted ? 1 : 0.05);
+          .attr("opacity", () => {
+            return activeLinkIndicesRef.current.has(l.index) ? (isHighlighted ? 1 : 0.05) : 0;
+          });
 
         return isHighlighted ? 1 : 0.05;
       });
@@ -94,8 +99,8 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .scale(2);
 
       // プラトンの初期座標値はここで取得
-      console.log(x);
-      console.log(y);
+      // console.log(x);
+      // console.log(y);
       
       svg
         .transition()
@@ -113,14 +118,12 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .call(zoomInstance.current);
 
     const defs = svg.append("defs");
-    console.log("#aaaa")
     defs
       .selectAll("marker")
       .data(data.links)
       .enter()
       .append("marker")
       .attr("id", (d,i) => {
-        console.log(i)
         return (
         `arrow-${i}`
       )})
@@ -333,6 +336,8 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   useEffect(() => {
     if (initialMount) return;
     
+    // 有向エッジの集合を初期化
+    activeLinkIndicesRef.current.clear();
     // state変更時、nodeのopacityを初期化 
     nodeRef.current.nodes().forEach((t,i) => {
       d3.select(t).transition().duration(300).attr("fill-opacity", 0.05);
@@ -341,24 +346,24 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     linkRef.current.nodes().forEach((t,i) => {
       let strokeColor = "black";
       let strokeOpacity = 0.05;
-      let markerEnd = null;
+      let markerEnd = `url(#arrow-${i})`;
       let markerColor = "black";
       let markerOpacity = 0;
       if (stateM && t.__data__.relation_id === "M") {
+        activeLinkIndicesRef.current.add(i);
         strokeColor = "red";
         strokeOpacity = 1;
-        markerEnd = `url(#arrow-${i})`;
         markerColor = "red";
         markerOpacity = 1;
 
         nodeRef.current.nodes().forEach((t2,i) => {
-          console.log(t.__data__.source.id)
           if(t2.__data__.id === t.__data__.source.id || t2.__data__.id === t.__data__.target.id){
             d3.select(t2).transition().duration(300).attr("fill-opacity",1);
           }
         })
       } 
       if (stateN && t.__data__.relation_id === "N") {
+        activeLinkIndicesRef.current.add(i);
         strokeColor = "blue";
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
@@ -366,13 +371,13 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         markerOpacity = 1;
 
         nodeRef.current.nodes().forEach((t2,i) => {
-          console.log(t2.__data__)
           if(t2.__data__.id == t.__data__.source.id || t2.__data__.id == t.__data__.target.id){
             d3.select(t2).transition().duration(300).attr("fill-opacity",1);
           }
         })
       } 
       if (stateU && t.__data__.relation_id === "U") {
+        activeLinkIndicesRef.current.add(i);
         strokeColor = "green";
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
@@ -380,11 +385,10 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         markerOpacity = 1;
 
         nodeRef.current.nodes().forEach((t2,i) => {
-          console.log(t2.__data__)
           if(t2.__data__.id == t.__data__.source.id || t2.__data__.id == t.__data__.target.id){
             d3.select(t2).transition().duration(300).attr("fill-opacity",1);
           }
-        })
+        });
       }
       d3.select(t)
         .transition()
