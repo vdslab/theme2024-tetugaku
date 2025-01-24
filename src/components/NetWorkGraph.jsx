@@ -193,16 +193,17 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       nodeRef.current = node;
 
     // シミュレーション設定
-    const simulation = d3
-      .forceSimulation(data.nodes)
+    const simulation = d3.forceSimulation(data.nodes)
       .force(
         "link",
-        d3.forceLink(data.links).id(function (d) {
-          return d.id;
-        })
+        d3.forceLink(data.links)
+          .id(d => d.id)
+          .distance(70)
       )
-      .force("charge", d3.forceManyBody(0).strength(-100))
-      .force("center", d3.forceCenter(250, 250));
+      .force("charge", d3.forceManyBody().strength(-100))
+      .force("center", d3.forceCenter(250, 250))
+      .force("x", d3.forceX(250).strength(0.01))
+      .force("y", d3.forceY(250).strength(0.01));
 
     // シミュレーション
     simulation.on("tick", () => {
