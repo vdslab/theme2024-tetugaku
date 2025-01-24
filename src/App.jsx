@@ -24,10 +24,6 @@ function App() {
     setRenderComplete(true);
   };
 
-  // 思想家の初期表示をプラトンに設定
-  useEffect(() => {
-    setClickedNodeId(5);
-  }, []);
   return (
     <div className="wrapper">
       {/* wrapper-styles.css適用箇所 */}

@@ -6,6 +6,10 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   const svgRef = useRef(null);
   const [initialMount,setInitialMount] = useState(true);
   const linkRef = useRef(null);
+  const nodeRef = useRef(null);
+
+  // 有向エッジの集合
+  const activeLinkIndicesRef = useRef(new Set()); 
 
   const [stateM,setStateM] = useState(false);
   const [stateN,setStateN] = useState(false);
@@ -40,6 +44,39 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     })
   );
 
+  // ノードクリックでノードとエッジをハイライト表示
+  const highlightByNodeClick = (e, clickedNode ) => {
+    const nearests = nearestNodeList.current[clickedNode.id];
+    nodeRef.current
+      .transition()
+      .duration(300)
+      .attr("fill-opacity", (d) => {
+        return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.05;
+      });
+    linkRef.current
+      .transition()
+      .duration(300)
+      .attr("stroke-opacity", (l) => {
+        const sourceId =
+          typeof l.source === "object" ? l.source.id : l.source;
+        const targetId =
+          typeof l.target === "object" ? l.target.id : l.target;
+
+        const isHighlighted =
+          sourceId === clickedNode.id || targetId === clickedNode.id;
+
+        // マーカーの透明度を更新
+        d3.select(`#arrow-${l.index} path`)
+          .transition()
+          .duration(300)
+          .attr("opacity", () => {
+            return activeLinkIndicesRef.current.has(l.index) ? (isHighlighted ? 1 : 0.05) : 0;
+          });
+
+        return isHighlighted ? 1 : 0.05;
+      });
+  };
+
   // グラフの描画
   useEffect(() => {
     setData(processed_data);
@@ -58,12 +95,12 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
 
       // ノードを中心へ移動
       const toCenter = d3.zoomIdentity
-      .translate(250 - x * 2, 250 - y * 2)
+      .translate(250 - 2*x, 250 - 2*y-50)
       .scale(2);
 
       // プラトンの初期座標値はここで取得
-      console.log(x);
-      console.log(y);
+      // console.log(x);
+      // console.log(y);
       
       svg
         .transition()
@@ -71,36 +108,6 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         .call(zoomInstance.current.transform, toCenter);
     };
 
-    // ノードクリックでノードとエッジをハイライト表示
-    const highlightByNodeClick = (e, clickedNode) => {
-      const nearests = nearestNodeList.current[clickedNode.id];
-      node
-        .transition()
-        .duration(300)
-        .attr("fill-opacity", (d) => {
-          return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.5;
-        });
-      link
-        .transition()
-        .duration(300)
-        .attr("stroke-opacity", (l) => {
-          const sourceId =
-            typeof l.source === "object" ? l.source.id : l.source;
-          const targetId =
-            typeof l.target === "object" ? l.target.id : l.target;
-  
-          const isHighlighted =
-            sourceId === clickedNode.id || targetId === clickedNode.id;
-  
-          // マーカーの透明度を更新
-          d3.select(`#arrow-${l.index} path`)
-            .transition()
-            .duration(300)
-            .attr("opacity", isHighlighted ? 1 : 0.1);
-  
-          return isHighlighted ? 1 : 0.1;
-        });
-    };
 
     const svg = d3
       .select(svgRef.current)
@@ -111,26 +118,26 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .call(zoomInstance.current);
 
     const defs = svg.append("defs");
-    console.log("#aaaa")
     defs
       .selectAll("marker")
       .data(data.links)
       .enter()
       .append("marker")
       .attr("id", (d,i) => {
-        console.log(i)
         return (
         `arrow-${i}`
       )})
       .attr("viewBox", "0 0 10 10")
-      .attr("refX", 21)
+      .attr("refX", 10)
       .attr("refY", 5)
       .attr("markerWidth", 6)
       .attr("markerHeight", 6)
       .attr("orient", "auto")
       .append("path")
       .attr("d", "M0,0 L0,10 L10,5 Z")
+      .transition().duration(300)
       .attr("fill", (d) => iroCd[d.relation_id]);
+      
 
     const svgGroup = svg.append("g").attr("class", "main-group");
 
@@ -153,7 +160,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         return Math.sqrt(d.value);
       })
       .attr("stroke", "black")
-      .attr("stroke-opacity", 0.6);
+      .attr("stroke-opacity", 0.05)
 
     // ノードの描画
     const node = svgGroup
@@ -167,6 +174,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .attr("fill", function (d) {
         return color(d.group);
       })
+      .attr("fill-opacity", 0.05)
       .on("click.select", selectByNodeClick)
       .on("click.zoom", zoomByNodeClick)
       .on("mouseover.highlight", highlightByNodeClick);
@@ -188,26 +196,52 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         return nameObj ? nameObj.name : d.id;
       });
       linkRef.current = link;
+      nodeRef.current = node;
 
     // シミュレーション設定
-    const simulation = d3
-      .forceSimulation(data.nodes)
+    const simulation = d3.forceSimulation(data.nodes)
       .force(
         "link",
-        d3.forceLink(data.links).id(function (d) {
-          return d.id;
-        })
+        d3.forceLink(data.links)
+          .id(d => d.id)
+          .distance(70)
       )
-      .force("charge", d3.forceManyBody(0).strength(-100))
-      .force("center", d3.forceCenter(250, 250));
+      .force("charge", d3.forceManyBody().strength(-100))
+      .force("center", d3.forceCenter(250, 250))
+      .force("x", d3.forceX(250).strength(0.01))
+      .force("y", d3.forceY(250).strength(0.01));
 
     // シミュレーション
     simulation.on("tick", () => {
       link
-        .attr("x1", (d) => d.source.x)
-        .attr("y1", (d) => d.source.y)
-        .attr("x2", (d) => d.target.x)
-        .attr("y2", (d) => d.target.y);
+      .attr("x1", (d) => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const offset = 6.5; // 短くする長さ（仮）
+        return d.source.x + (dx / dist) * offset;
+      })
+      .attr("y1", (d) => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const offset = 6.5;
+        return d.source.y + (dy / dist) * offset;
+      })
+      .attr("x2", (d) => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const offset = 6.5;
+        return d.target.x - (dx / dist) * offset;
+      })
+      .attr("y2", (d) => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const offset = 6.5;
+        return d.target.y - (dy / dist) * offset;
+      });
       node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 
       labels.attr("x", (d) => d.x).attr("y", (d) => d.y);
@@ -243,18 +277,21 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     };
   }, [data]);
 
-  // selectedNodeIdを持つノードを中心に移動
+  // selectedNodeIdを持つノードを中心に移動 & ハイライト
   useEffect(() => {
     if (initialMount || !data || !selectedNodeId) return;
     const selectedNode = data.nodes.find((node) => node.id === selectedNodeId);
     if (selectedNode) {
       const x = selectedNode.x;
       const y = selectedNode.y;
-      const toCenter = d3.zoomIdentity.translate(250 - x, 250 - y);
+      const toCenter = d3.zoomIdentity.translate(250 - 2*x, 250 - 2*y-50).scale(2);
       d3.select(svgRef.current)
         .transition()
         .duration(750)
-        .call(zoomInstance.current.transform, toCenter);
+        .call(zoomInstance.current.transform, toCenter)
+        .on("end", () => {
+          highlightByNodeClick(null, selectedNode);
+        });
     }
   }, [selectedNodeId, data]);
 
@@ -280,57 +317,93 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
 
   // プラトンの座標を初期値として登録
   useEffect(() => {
-    const x = 323.9262121518633;
-    const y = 169.9527236526979;
-    const toCenter = d3.zoomIdentity.translate(250 - x, 250 - y);
+    const x = 306.6817111535429;
+    const y = 196.75920984957799;
+    const toCenter = d3.zoomIdentity.translate(250 - 2*x, 250 - 2*y-50).scale(2);
     d3.select(svgRef.current)
       .transition()
       .duration(750)
       .call(zoomInstance.current.transform, toCenter);
   },[])
 
-  // relation_idに応じてエッジとマーカーの色を変更する処理
+  // 初期レンダリング時にプラトンを選択
+  useEffect(()=> {
+    if (initialMount) return;
+    onNodeClick(5);
+  },[initialMount]);
+
+
   useEffect(() => {
     if (initialMount) return;
+    
+    // 有向エッジの集合を初期化
+    activeLinkIndicesRef.current.clear();
+    // state変更時、nodeのopacityを初期化 
+    nodeRef.current.nodes().forEach((t,i) => {
+      d3.select(t).transition().duration(300).attr("fill-opacity", 0.05);
+    });
 
     linkRef.current.nodes().forEach((t,i) => {
-      // デフォルトの色とマーカー
       let strokeColor = "black";
-      let markerEnd = null;
-
-      // Aの色とマーカー
+      let strokeOpacity = 0.05;
+      let markerEnd = `url(#arrow-${i})`;
+      let markerColor = "black";
+      let markerOpacity = 0;
       if (stateM && t.__data__.relation_id === "M") {
+        activeLinkIndicesRef.current.add(i);
         strokeColor = "red";
-        markerEnd = `url(#arrow-${i})`;
-      }
-      // Bの色とマーカー
+        strokeOpacity = 1;
+        markerColor = "red";
+        markerOpacity = 1;
+
+        nodeRef.current.nodes().forEach((t2,i) => {
+          if(t2.__data__.id === t.__data__.source.id || t2.__data__.id === t.__data__.target.id){
+            d3.select(t2).transition().duration(300).attr("fill-opacity",1);
+          }
+        })
+      } 
       if (stateN && t.__data__.relation_id === "N") {
+        activeLinkIndicesRef.current.add(i);
         strokeColor = "blue";
+        strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-      }
-      // Cの色とマーカー
+        markerColor = "blue";
+        markerOpacity = 1;
+
+        nodeRef.current.nodes().forEach((t2,i) => {
+          if(t2.__data__.id == t.__data__.source.id || t2.__data__.id == t.__data__.target.id){
+            d3.select(t2).transition().duration(300).attr("fill-opacity",1);
+          }
+        })
+      } 
       if (stateU && t.__data__.relation_id === "U") {
+        activeLinkIndicesRef.current.add(i);
         strokeColor = "green";
+        strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-      }
+        markerColor = "green";
+        markerOpacity = 1;
 
-      // マーカー削除
-      if (!stateM && t.__data__.relation_id === "M") {
-        markerEnd = null;
+        nodeRef.current.nodes().forEach((t2,i) => {
+          if(t2.__data__.id == t.__data__.source.id || t2.__data__.id == t.__data__.target.id){
+            d3.select(t2).transition().duration(300).attr("fill-opacity",1);
+          }
+        });
       }
-      if (!stateN && t.__data__.relation_id === "N") {
-        markerEnd = null;
-      }
-      if (!stateU && t.__data__.relation_id === "U") { 
-        markerEnd = null;
-      }
-
-      // エッジのスタイルを更新
       d3.select(t)
+        .transition()
+        .duration(300)
         .attr("stroke", strokeColor)
+        .attr("stroke-opacity", strokeOpacity)
         .attr("marker-end", markerEnd);
+
+      d3.select(`#arrow-${i} path`)
+        .transition()
+        .duration(300)
+        .attr("fill", markerColor)
+        .attr("opacity", markerOpacity);
     });
-  }, [stateM, stateN, stateU]);
+  }, [stateM, stateN, stateU, initialMount]);
 
 
 
