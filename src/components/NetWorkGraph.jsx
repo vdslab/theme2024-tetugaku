@@ -90,7 +90,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
 
       // ノードを中心へ移動
       const toCenter = d3.zoomIdentity
-      .translate(250 - x * 2, 250 - y * 2)
+      .translate(250 - 2*x, 250 - 2*y-50)
       .scale(2);
 
       // プラトンの初期座標値はここで取得
@@ -253,7 +253,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     if (selectedNode) {
       const x = selectedNode.x;
       const y = selectedNode.y;
-      const toCenter = d3.zoomIdentity.translate(250 - x, 250 - y);
+      const toCenter = d3.zoomIdentity.translate(250 - 2*x, 250 - 2*y-50).scale(2);
       d3.select(svgRef.current)
         .transition()
         .duration(750)
@@ -286,9 +286,9 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
 
   // プラトンの座標を初期値として登録
   useEffect(() => {
-    const x = 323.9262121518633;
-    const y = 169.9527236526979;
-    const toCenter = d3.zoomIdentity.translate(250 - x, 250 - y);
+    const x = 306.6817111535429;
+    const y = 196.75920984957799;
+    const toCenter = d3.zoomIdentity.translate(250 - 2*x, 250 - 2*y-50).scale(2);
     d3.select(svgRef.current)
       .transition()
       .duration(750)
