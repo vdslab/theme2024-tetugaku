@@ -298,9 +298,15 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
 
   useEffect(() => {
     if (initialMount) return;
+    
+    // state変更時、nodeのopacityを初期化 
+    nodeRef.current.nodes().forEach((t,i) => {
+      d3.select(t).attr("fill-opacity",0.1);
+    })
+
     linkRef.current.nodes().forEach((t,i) => {
       let strokeColor = "black";
-      let strokeOpacity = 0.2;
+      let strokeOpacity = 0.05;
       let markerEnd = null;
       let markerColor = "black";
       let markerOpacity = 0;
@@ -310,6 +316,13 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         markerEnd = `url(#arrow-${i})`;
         markerColor = "red";
         markerOpacity = 1;
+
+        nodeRef.current.nodes().forEach((t2,i) => {
+          console.log(t.__data__.source.id)
+          if(t2.__data__.id === t.__data__.source.id || t2.__data__.id === t.__data__.target.id){
+            d3.select(t2).attr("fill-opacity",1);
+          }
+        })
       } 
       if (stateN && t.__data__.relation_id === "N") {
         strokeColor = "blue";
@@ -317,6 +330,13 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         markerEnd = `url(#arrow-${i})`;
         markerColor = "blue";
         markerOpacity = 1;
+
+        nodeRef.current.nodes().forEach((t2,i) => {
+          console.log(t2.__data__)
+          if(t2.__data__.id == t.__data__.source.id || t2.__data__.id == t.__data__.target.id){
+            d3.select(t2).attr("fill-opacity",1);
+          }
+        })
       } 
       if (stateU && t.__data__.relation_id === "U") {
         strokeColor = "green";
@@ -324,6 +344,13 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         markerEnd = `url(#arrow-${i})`;
         markerColor = "green";
         markerOpacity = 1;
+
+        nodeRef.current.nodes().forEach((t2,i) => {
+          console.log(t2.__data__)
+          if(t2.__data__.id == t.__data__.source.id || t2.__data__.id == t.__data__.target.id){
+            d3.select(t2).attr("fill-opacity",1);
+          }
+        })
       }
       d3.select(t)
         .transition()
