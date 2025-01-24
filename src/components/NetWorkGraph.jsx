@@ -296,6 +296,13 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .call(zoomInstance.current.transform, toCenter);
   },[])
 
+  // 初期レンダリング時にプラトンを選択
+  useEffect(()=> {
+    if (initialMount) return;
+    onNodeClick(5);
+  },[initialMount]);
+
+
   useEffect(() => {
     if (initialMount) return;
     
