@@ -296,48 +296,49 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .call(zoomInstance.current.transform, toCenter);
   },[])
 
-  // relation_idに応じてエッジとマーカーの色を変更する処理
   useEffect(() => {
     if (initialMount) return;
-
     linkRef.current.nodes().forEach((t,i) => {
-      // デフォルトの色とマーカー
       let strokeColor = "black";
+      let strokeOpacity = 0.2;
       let markerEnd = null;
-
-      // Aの色とマーカー
+      let markerColor = "black";
+      let markerOpacity = 0;
       if (stateM && t.__data__.relation_id === "M") {
         strokeColor = "red";
+        strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-      }
-      // Bの色とマーカー
+        markerColor = "red";
+        markerOpacity = 1;
+      } 
       if (stateN && t.__data__.relation_id === "N") {
         strokeColor = "blue";
+        strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-      }
-      // Cの色とマーカー
+        markerColor = "blue";
+        markerOpacity = 1;
+      } 
       if (stateU && t.__data__.relation_id === "U") {
         strokeColor = "green";
+        strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
+        markerColor = "green";
+        markerOpacity = 1;
       }
-
-      // マーカー削除
-      if (!stateM && t.__data__.relation_id === "M") {
-        markerEnd = null;
-      }
-      if (!stateN && t.__data__.relation_id === "N") {
-        markerEnd = null;
-      }
-      if (!stateU && t.__data__.relation_id === "U") { 
-        markerEnd = null;
-      }
-
-      // エッジのスタイルを更新
       d3.select(t)
+        .transition()
+        .duration(300)
         .attr("stroke", strokeColor)
+        .attr("stroke-opacity", strokeOpacity)
         .attr("marker-end", markerEnd);
+
+      d3.select(`#arrow-${i} path`)
+        .transition()
+        .duration(300)
+        .attr("fill", markerColor)
+        .attr("opacity", markerOpacity);
     });
-  }, [stateM, stateN, stateU]);
+  }, [stateM, stateN, stateU, initialMount]);
 
 
 
