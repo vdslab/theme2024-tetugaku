@@ -1,34 +1,41 @@
 import { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
+import "./NetworkGraph.css";
 
-function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGroupId, handleRenderComplete }) {
+function NetworkGraph({
+  processed_data,
+  onNodeClick,
+  selectedNodeId,
+  selectedGroupId,
+  handleRenderComplete,
+}) {
   const [data, setData] = useState(null);
   const svgRef = useRef(null);
-  const [initialMount,setInitialMount] = useState(true);
+  const [initialMount, setInitialMount] = useState(true);
   const linkRef = useRef(null);
   const nodeRef = useRef(null);
 
   // 有向エッジの集合
-  const activeLinkIndicesRef = useRef(new Set()); 
+  const activeLinkIndicesRef = useRef(new Set());
 
-  const [stateM,setStateM] = useState(false);
-  const [stateN,setStateN] = useState(false);
-  const [stateU,setStateU] = useState(false);
+  const [stateM, setStateM] = useState(false);
+  const [stateN, setStateN] = useState(false);
+  const [stateU, setStateU] = useState(false);
 
   // todo できればiroCd(変更していい)を使ってまとめたい
   const iroCd = {
-    'M':"red",
-    'N':"blue",
-    'U':"green"
-  }
+    M: "red",
+    N: "blue",
+    U: "green",
+  };
   // デバッグ用
-  function handleClickA(){
+  function handleClickA() {
     setStateM(!stateM);
-  }  
-  function handleClickB(){
+  }
+  function handleClickB() {
     setStateN(!stateN);
   }
-  function handleClickC(){
+  function handleClickC() {
     setStateU(!stateU);
   }
   // 隣接リストの準備
@@ -45,7 +52,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   );
 
   // ノードクリックでノードとエッジをハイライト表示
-  const highlightByNodeClick = (e, clickedNode ) => {
+  const highlightByNodeClick = (e, clickedNode) => {
     const nearests = nearestNodeList.current[clickedNode.id];
     nodeRef.current
       .transition()
@@ -57,10 +64,8 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .transition()
       .duration(300)
       .attr("stroke-opacity", (l) => {
-        const sourceId =
-          typeof l.source === "object" ? l.source.id : l.source;
-        const targetId =
-          typeof l.target === "object" ? l.target.id : l.target;
+        const sourceId = typeof l.source === "object" ? l.source.id : l.source;
+        const targetId = typeof l.target === "object" ? l.target.id : l.target;
 
         const isHighlighted =
           sourceId === clickedNode.id || targetId === clickedNode.id;
@@ -70,7 +75,11 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
           .transition()
           .duration(300)
           .attr("opacity", () => {
-            return activeLinkIndicesRef.current.has(l.index) ? (isHighlighted ? 1 : 0.05) : 0;
+            return activeLinkIndicesRef.current.has(l.index)
+              ? isHighlighted
+                ? 1
+                : 0.05
+              : 0;
           });
 
         return isHighlighted ? 1 : 0.05;
@@ -95,19 +104,18 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
 
       // ノードを中心へ移動
       const toCenter = d3.zoomIdentity
-      .translate(250 - 2*x, 250 - 2*y-50)
-      .scale(2);
+        .translate(250 - 2 * x, 250 - 2 * y - 50)
+        .scale(2);
 
       // プラトンの初期座標値はここで取得
       // console.log(x);
       // console.log(y);
-      
+
       svg
         .transition()
         .duration(750)
         .call(zoomInstance.current.transform, toCenter);
     };
-
 
     const svg = d3
       .select(svgRef.current)
@@ -123,10 +131,9 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .data(data.links)
       .enter()
       .append("marker")
-      .attr("id", (d,i) => {
-        return (
-        `arrow-${i}`
-      )})
+      .attr("id", (d, i) => {
+        return `arrow-${i}`;
+      })
       .attr("viewBox", "0 0 10 10")
       .attr("refX", 10)
       .attr("refY", 5)
@@ -135,9 +142,9 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
       .attr("orient", "auto")
       .append("path")
       .attr("d", "M0,0 L0,10 L10,5 Z")
-      .transition().duration(300)
+      .transition()
+      .duration(300)
       .attr("fill", (d) => iroCd[d.relation_id]);
-      
 
     const svgGroup = svg.append("g").attr("class", "main-group");
 
@@ -160,7 +167,7 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         return Math.sqrt(d.value);
       })
       .attr("stroke", "black")
-      .attr("stroke-opacity", 0.05)
+      .attr("stroke-opacity", 0.05);
 
     // ノードの描画
     const node = svgGroup
@@ -195,15 +202,17 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         const nameObj = data.names?.find((n) => n.name_id === d.id);
         return nameObj ? nameObj.name : d.id;
       });
-      linkRef.current = link;
-      nodeRef.current = node;
+    linkRef.current = link;
+    nodeRef.current = node;
 
     // シミュレーション設定
-    const simulation = d3.forceSimulation(data.nodes)
+    const simulation = d3
+      .forceSimulation(data.nodes)
       .force(
         "link",
-        d3.forceLink(data.links)
-          .id(d => d.id)
+        d3
+          .forceLink(data.links)
+          .id((d) => d.id)
           .distance(70)
       )
       .force("charge", d3.forceManyBody().strength(-100))
@@ -214,44 +223,44 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     // シミュレーション
     simulation.on("tick", () => {
       link
-      .attr("x1", (d) => {
-        const dx = d.target.x - d.source.x;
-        const dy = d.target.y - d.source.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const offset = 6.5; // 短くする長さ（仮）
-        return d.source.x + (dx / dist) * offset;
-      })
-      .attr("y1", (d) => {
-        const dx = d.target.x - d.source.x;
-        const dy = d.target.y - d.source.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const offset = 6.5;
-        return d.source.y + (dy / dist) * offset;
-      })
-      .attr("x2", (d) => {
-        const dx = d.target.x - d.source.x;
-        const dy = d.target.y - d.source.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const offset = 6.5;
-        return d.target.x - (dx / dist) * offset;
-      })
-      .attr("y2", (d) => {
-        const dx = d.target.x - d.source.x;
-        const dy = d.target.y - d.source.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const offset = 6.5;
-        return d.target.y - (dy / dist) * offset;
-      });
+        .attr("x1", (d) => {
+          const dx = d.target.x - d.source.x;
+          const dy = d.target.y - d.source.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const offset = 6.5; // 短くする長さ（仮）
+          return d.source.x + (dx / dist) * offset;
+        })
+        .attr("y1", (d) => {
+          const dx = d.target.x - d.source.x;
+          const dy = d.target.y - d.source.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const offset = 6.5;
+          return d.source.y + (dy / dist) * offset;
+        })
+        .attr("x2", (d) => {
+          const dx = d.target.x - d.source.x;
+          const dy = d.target.y - d.source.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const offset = 6.5;
+          return d.target.x - (dx / dist) * offset;
+        })
+        .attr("y2", (d) => {
+          const dx = d.target.x - d.source.x;
+          const dy = d.target.y - d.source.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const offset = 6.5;
+          return d.target.y - (dy / dist) * offset;
+        });
       node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 
       labels.attr("x", (d) => d.x).attr("y", (d) => d.y);
     });
 
     // 初期描画が終了したタイミングでinitialMountflagをおろす
-    simulation.on("end",() => {
-      setInitialMount(false)
+    simulation.on("end", () => {
+      setInitialMount(false);
       handleRenderComplete();
-    })
+    });
 
     // todo 初期描画が終了するまでセレクトボタンを使用できなくする
 
@@ -284,7 +293,9 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     if (selectedNode) {
       const x = selectedNode.x;
       const y = selectedNode.y;
-      const toCenter = d3.zoomIdentity.translate(250 - 2*x, 250 - 2*y-50).scale(2);
+      const toCenter = d3.zoomIdentity
+        .translate(250 - 2 * x, 250 - 2 * y - 50)
+        .scale(2);
       d3.select(svgRef.current)
         .transition()
         .duration(750)
@@ -300,7 +311,9 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     if (!data || !selectedGroupId) return;
 
     // selectedGroupIdと一致するノードを抽出
-    const groupNodes = data.nodes.filter((node) => node.group === selectedGroupId);
+    const groupNodes = data.nodes.filter(
+      (node) => node.group === selectedGroupId
+    );
 
     // ノード群の x, y の平均(重心)を計算
     const avgX = d3.mean(groupNodes, (d) => d.x);
@@ -319,31 +332,32 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
   useEffect(() => {
     const x = 306.6817111535429;
     const y = 196.75920984957799;
-    const toCenter = d3.zoomIdentity.translate(250 - 2*x, 250 - 2*y-50).scale(2);
+    const toCenter = d3.zoomIdentity
+      .translate(250 - 2 * x, 250 - 2 * y - 50)
+      .scale(2);
     d3.select(svgRef.current)
       .transition()
       .duration(750)
       .call(zoomInstance.current.transform, toCenter);
-  },[])
+  }, []);
 
   // 初期レンダリング時にプラトンを選択
-  useEffect(()=> {
+  useEffect(() => {
     if (initialMount) return;
     onNodeClick(5);
-  },[initialMount]);
-
+  }, [initialMount]);
 
   useEffect(() => {
     if (initialMount) return;
-    
+
     // 有向エッジの集合を初期化
     activeLinkIndicesRef.current.clear();
-    // state変更時、nodeのopacityを初期化 
-    nodeRef.current.nodes().forEach((t,i) => {
+    // state変更時、nodeのopacityを初期化
+    nodeRef.current.nodes().forEach((t, i) => {
       d3.select(t).transition().duration(300).attr("fill-opacity", 0.05);
     });
 
-    linkRef.current.nodes().forEach((t,i) => {
+    linkRef.current.nodes().forEach((t, i) => {
       let strokeColor = "black";
       let strokeOpacity = 0.05;
       let markerEnd = `url(#arrow-${i})`;
@@ -356,12 +370,15 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         markerColor = "red";
         markerOpacity = 1;
 
-        nodeRef.current.nodes().forEach((t2,i) => {
-          if(t2.__data__.id === t.__data__.source.id || t2.__data__.id === t.__data__.target.id){
-            d3.select(t2).transition().duration(300).attr("fill-opacity",1);
+        nodeRef.current.nodes().forEach((t2, i) => {
+          if (
+            t2.__data__.id === t.__data__.source.id ||
+            t2.__data__.id === t.__data__.target.id
+          ) {
+            d3.select(t2).transition().duration(300).attr("fill-opacity", 1);
           }
-        })
-      } 
+        });
+      }
       if (stateN && t.__data__.relation_id === "N") {
         activeLinkIndicesRef.current.add(i);
         strokeColor = "blue";
@@ -370,12 +387,15 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         markerColor = "blue";
         markerOpacity = 1;
 
-        nodeRef.current.nodes().forEach((t2,i) => {
-          if(t2.__data__.id == t.__data__.source.id || t2.__data__.id == t.__data__.target.id){
-            d3.select(t2).transition().duration(300).attr("fill-opacity",1);
+        nodeRef.current.nodes().forEach((t2, i) => {
+          if (
+            t2.__data__.id == t.__data__.source.id ||
+            t2.__data__.id == t.__data__.target.id
+          ) {
+            d3.select(t2).transition().duration(300).attr("fill-opacity", 1);
           }
-        })
-      } 
+        });
+      }
       if (stateU && t.__data__.relation_id === "U") {
         activeLinkIndicesRef.current.add(i);
         strokeColor = "green";
@@ -384,9 +404,12 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
         markerColor = "green";
         markerOpacity = 1;
 
-        nodeRef.current.nodes().forEach((t2,i) => {
-          if(t2.__data__.id == t.__data__.source.id || t2.__data__.id == t.__data__.target.id){
-            d3.select(t2).transition().duration(300).attr("fill-opacity",1);
+        nodeRef.current.nodes().forEach((t2, i) => {
+          if (
+            t2.__data__.id == t.__data__.source.id ||
+            t2.__data__.id == t.__data__.target.id
+          ) {
+            d3.select(t2).transition().duration(300).attr("fill-opacity", 1);
           }
         });
       }
@@ -405,13 +428,19 @@ function NetworkGraph({ processed_data, onNodeClick, selectedNodeId, selectedGro
     });
   }, [stateM, stateN, stateU, initialMount]);
 
-
-
   return (
     <>
-      <button onClick={handleClickA}>切り替えA</button>
-      <button onClick={handleClickB}>切り替えB</button>
-      <button onClick={handleClickC}>切り替えC</button>
+      <div className="network-button">
+        <button onClick={handleClickA} className={stateM ? "active" : ""}>
+          切り替えA
+        </button>
+        <button onClick={handleClickB} className={stateN ? "active" : ""}>
+          切り替えB
+        </button>
+        <button onClick={handleClickC} className={stateU ? "active" : ""}>
+          切り替えC
+        </button>
+      </div>
       <svg ref={svgRef} className="network-graph"></svg>
     </>
   );

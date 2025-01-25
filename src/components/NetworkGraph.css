@@ -1,0 +1,32 @@
+.network-button {
+  position: absolute;
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  margin-left: 8px;
+}
+
+.network-button button {
+  background: #f0ebf1;
+  box-shadow: 0 0 10px #00000040;
+  /* border: none; */
+  color: #454545;
+  /* border: 1px solid #e0e0e0; */
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "刻明朝";
+}
+
+.network-button button:hover {
+  background: #a4a3d9;
+}
+
+.network-button button:active {
+  background: #d8d4d9;
+}
+
+.network-button button.active {
+  background: #1a1a1a;
+  color: #f1f1f1;
+}
