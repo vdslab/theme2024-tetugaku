@@ -34,11 +34,13 @@
   overflow-y: auto;
   border-radius: 4px;
   box-sizing: border-box;
+  position: relative;
 }
 
 svg {
   height: 100%; /* 親要素に合わせる */
   width: 100%; /* 必要なら幅も調整 */
+  display: block;
 }
 
 .book-container {
