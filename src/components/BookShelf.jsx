@@ -22,10 +22,10 @@ const BookShelf = ({ processed_data, nodeId }) => {
         if (!selectedAuthor) return [];
 
         const relatedLinks = processed_data.links.filter((link) => {
-          return link.source.id === nodeId;
+          return link.target.id === nodeId;
         });
 
-        const relatedIds = relatedLinks.map((link) => link.target.id);
+        const relatedIds = relatedLinks.map((link) => link.source.id);
 
         const relatedAuthors = relatedIds
           .map((id) => processed_data.names.find((name) => name.name_id === id))

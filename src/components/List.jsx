@@ -3,7 +3,7 @@ import "./List.css";
 
 // relation_id をラベルに変換したい場合の例
 const RELATION_ID_MAP = {
-  U: "？？影響", //未定
+  U: "弁証法的影響",
   A: "肯定的影響",
   N: "批判的影響",
   M: "師弟関係"
@@ -30,13 +30,12 @@ function List({ processed_data, nodeId, highlightNode }){
       const s = typeof l.source === 'object' ? l.source.id : l.source;
       return s === nodeId;
     });
-    
-    // const edgesTo = processed_data.links.filter(l => {
-    //   const t = typeof l.target === 'object' ? l.target.id : l.target;
-    //   return t === nodeId;
-    // });
+    const edgesTo = processed_data.links.filter(l => {
+      const t = typeof l.target === 'object' ? l.target.id : l.target;
+      return t === nodeId;
+    });
 
-  // // 選択なし
+  // // 何も選択されていない場合
   // if (!nodeId) {
   //   return <div className="p-4">ノードを選択してください</div>;
   // }
@@ -62,7 +61,7 @@ function List({ processed_data, nodeId, highlightNode }){
         )}
 
         {/* この思想家が影響を与えた相手 */}
-        <h2 className="text-xl font-bold mb-2">この思想家が影響を与えた相手</h2>
+        {/* <h2 className="text-xl font-bold mb-2">この思想家が影響を与えた相手</h2>
         {edgesFrom.length === 0 ? (
           <div className="mb-4">該当なし</div>
         ) : (
@@ -84,18 +83,18 @@ function List({ processed_data, nodeId, highlightNode }){
                     {targetName}（{relationLabel}）
                   </div>
                   {/* 説明があれば表示 */}
-                  {link.relation_info && (
+                  {/* {link.relation_info && (
                     <div className="relation-info">{link.relation_info}</div>
                   )}
                 </div>
               );
             })}
-          </div>
-        )}
+          </div> */}
+        {/* )}} */}
 
-        {/* 
-        -- 「影響を受けた相手」も表示したい場合は必要に応じて下記をコメントアウト解除 --
-        <h2 className="text-xl font-bold mt-4 mb-2">この思想家が影響を受けた相手</h2>
+        
+        {/* この思想家が影響を受けた相手 */}
+        <h2 className="text-xl font-bold mt-4 mb-2">影響を与えた思想家とその詳細</h2>
         {edgesTo.length === 0 ? (
           <div className="mb-4">該当なし</div>
         ) : (
@@ -123,7 +122,7 @@ function List({ processed_data, nodeId, highlightNode }){
             })}
           </div>
         )}
-        */}
+       
       </div>
     </div>
   );
