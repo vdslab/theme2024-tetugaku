@@ -1,4 +1,13 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import "./List.css";
+
+// relation_id をラベルに変換したい場合の例
+const RELATION_ID_MAP = {
+  U: "？？影響", //未定
+  A: "肯定的影響",
+  N: "批判的影響",
+  M: "師弟関係"
+};
 
 function List({ processed_data, nodeId, highlightNode }){
     const [keyword,setKeyword] = useState("");
@@ -7,7 +16,6 @@ function List({ processed_data, nodeId, highlightNode }){
       ? processed_data.keywords.filter(t => t.name_id === nodeId).map(t => t.keyword)
       : [];
 
-    // todo keywordマウスオーバー時の挙動(css)
     // 選択したkeywordを持つ思想家のname_idを取得
 
     useEffect(() => {
@@ -22,43 +30,102 @@ function List({ processed_data, nodeId, highlightNode }){
       const s = typeof l.source === 'object' ? l.source.id : l.source;
       return s === nodeId;
     });
-    const edgesTo = processed_data.links.filter(l => {
-      const t = typeof l.target === 'object' ? l.target.id : l.target;
-      return t === nodeId;
-    });
-  
-    return (
-      <div>
-        <h1>キーワード</h1>
-        {keywords.map(k => (
-          <div key={k}>
-            <span onClick={() => setKeyword(k)} id="mylink">{k}</span>
+    
+    // const edgesTo = processed_data.links.filter(l => {
+    //   const t = typeof l.target === 'object' ? l.target.id : l.target;
+    //   return t === nodeId;
+    // });
+
+  // // 選択なし
+  // if (!nodeId) {
+  //   return <div className="p-4">ノードを選択してください</div>;
+  // }
+
+  return (
+    <div>
+      <div className="information-header">List</div>
+        <div className="list-content">
+        {/* キーワード一覧 */}
+        <h2 className="text-xl font-bold mb-4">キーワード</h2>
+        {keywords.length === 0 ? (
+          <div className="mb-4">キーワードは登録されていません</div>
+        ) : (
+          <div className="mb-4">
+            {keywords.map((k) => (
+              <div key={k} className="keyword-item">
+                <span onClick={() => setKeyword(k)} className="keyword-link">
+                  {k}
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
-  
-        <h2>この思想家が影響を与えた相手</h2>
-        {edgesFrom.map(link => {
-          const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-          const targetName = processed_data.names.find(n => n.name_id === targetId)?.name;
-          return (
-            <div key={link.index}>
-              {targetName}（relation_id={link.relation_id}）
-            </div>
-          );
-        })}
-  
-        <h2>この思想家が影響を受けた相手</h2>
-        {edgesTo.map(link => {
-          const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-          const sourceName = processed_data.names.find(n => n.name_id === sourceId)?.name;
-          return (
-            <div key={link.index}>
-              {sourceName}（relation_id={link.relation_id}）
-            </div>
-          );
-        })}
+        )}
+
+        {/* この思想家が影響を与えた相手 */}
+        <h2 className="text-xl font-bold mb-2">この思想家が影響を与えた相手</h2>
+        {edgesFrom.length === 0 ? (
+          <div className="mb-4">該当なし</div>
+        ) : (
+          <div>
+            {edgesFrom.map((link) => {
+              const targetId =
+                typeof link.target === "object" ? link.target.id : link.target;
+              const targetName =
+                processed_data.names.find((n) => n.name_id === targetId)?.name ||
+                `ID: ${targetId}`;
+
+              // relation_id → ラベル変換
+              const relationLabel =
+                RELATION_ID_MAP[link.relation_id] || link.relation_id;
+
+              return (
+                <div key={link.index} className="relation-item">
+                  <div className="relation-main">
+                    {targetName}（{relationLabel}）
+                  </div>
+                  {/* 説明があれば表示 */}
+                  {link.relation_info && (
+                    <div className="relation-info">{link.relation_info}</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* 
+        -- 「影響を受けた相手」も表示したい場合は必要に応じて下記をコメントアウト解除 --
+        <h2 className="text-xl font-bold mt-4 mb-2">この思想家が影響を受けた相手</h2>
+        {edgesTo.length === 0 ? (
+          <div className="mb-4">該当なし</div>
+        ) : (
+          <div>
+            {edgesTo.map((link) => {
+              const sourceId =
+                typeof link.source === "object" ? link.source.id : link.source;
+              const sourceName =
+                processed_data.names.find((n) => n.name_id === sourceId)?.name ||
+                `ID: ${sourceId}`;
+
+              const relationLabel =
+                RELATION_ID_MAP[link.relation_id] || link.relation_id;
+
+              return (
+                <div key={link.index} className="relation-item">
+                  <div className="relation-main">
+                    {sourceName}（{relationLabel}）
+                  </div>
+                  {link.relation_info && (
+                    <div className="relation-info">{link.relation_info}</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+        */}
       </div>
-    );
+    </div>
+  );
 }
-  
 export default List;

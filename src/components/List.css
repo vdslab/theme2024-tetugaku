@@ -1,0 +1,60 @@
+.list-content {
+    /* 必要があればペディングやカラーなどを設定 */
+    padding: 0.3rem 1rem;
+  }
+  
+  .list-header {
+    padding: 0.5rem;
+    /* border-bottom: 1px solid #090909; */
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  .keyword-item {
+    margin-bottom: 0.3rem;
+  }
+  
+  .keyword-link {
+    color: #007acc;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  /* relation一覧のスタイル */
+  .relation-item {
+    margin-bottom: 1rem;
+  }
+  
+  .relation-main {
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+  }
+  
+  .relation-info {
+    margin-left: 1.5rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .text-xl {
+    font-size: 1.25rem;
+  }
+  
+  .font-bold {
+    font-weight: 700;
+  }
+  
+  .mb-2 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1rem;
+  }
+  
+  .mt-4 {
+    margin-top: 1rem;
+  }
+  
+  /* 見出しだけ少し大きめに、など */
+  /* さらにフォントを合わせたい場合は font-family 指定 */
