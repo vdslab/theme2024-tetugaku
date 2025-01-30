@@ -5,11 +5,15 @@ import SearchAndFilter from "./components/SearchAndFilter";
 import processed_data from "/create_json/output_data/processed_data";
 import BookShelf from "./components/BookShelf";
 import SelectNode from "./components/SelectNode";
+import List from "./components/List";
 
 function App() {
   const [clickedNodeId, setClickedNodeId] = useState(null);
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [renderComplete, setRenderComplete] = useState(null);
+
+  const [highlightNode,setHighlightNode] = useState([]);
+
   // ノードクリックを感知して、idをclickedNodeIdにセット
   const handleSetNodeId = (newNodeId) => {
     setClickedNodeId(newNodeId);
@@ -63,6 +67,11 @@ function App() {
               </div>
               <div className="list-container">
                 <h1>リストの表示</h1>
+                <List 
+                  processed_data={processed_data}
+                  nodeId={clickedNodeId}
+                  highlightNode={setHighlightNode}
+                />
               </div>
             </div>
             <div className="vis-container">
