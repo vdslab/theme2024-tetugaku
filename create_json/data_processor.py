@@ -60,8 +60,8 @@ def process_json(data,file):
         # linksの作成
         result["links"].extend([
             {
-                "source" : name_id,
-                "target" : fixed_targets_ids[i],
+                "source" : fixed_targets_ids[i],
+                "target" : name_id,
                 "relation_id" : relations[i],
                 "relation_info":relations_info[i]
             }
