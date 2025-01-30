@@ -94,7 +94,7 @@ function List({ processed_data, nodeId, highlightNode }){
 
         
         {/* この思想家が影響を受けた相手 */}
-        <h2 className="text-xl font-bold mt-4 mb-2">影響を与えた思想家と詳細</h2>
+        <h2 className="text-xl font-bold mt-4 mb-2">影響を与えた思想家とその詳細</h2>
         {edgesTo.length === 0 ? (
           <div className="mb-4">該当なし</div>
         ) : (
