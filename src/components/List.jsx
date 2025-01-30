@@ -37,23 +37,23 @@ function List({ processed_data, nodeId, highlightNode }){
         ))}
   
         <h2>この思想家が影響を与えた相手</h2>
-        {edgesTo.map(link => {
-          const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-          const sourceName = processed_data.names.find(n => n.name_id === sourceId)?.name;
-          return (
-            <div key={link.index}>
-              {sourceName}（relation_id={link.relation_id}）
-            </div>
-          );
-        })}
-  
-        <h2>この思想家が影響を受けた相手</h2>
         {edgesFrom.map(link => {
           const targetId = typeof link.target === 'object' ? link.target.id : link.target;
           const targetName = processed_data.names.find(n => n.name_id === targetId)?.name;
           return (
             <div key={link.index}>
               {targetName}（relation_id={link.relation_id}）
+            </div>
+          );
+        })}
+  
+        <h2>この思想家が影響を受けた相手</h2>
+        {edgesTo.map(link => {
+          const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+          const sourceName = processed_data.names.find(n => n.name_id === sourceId)?.name;
+          return (
+            <div key={link.index}>
+              {sourceName}（relation_id={link.relation_id}）
             </div>
           );
         })}
