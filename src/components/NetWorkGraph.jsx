@@ -21,6 +21,7 @@ function NetworkGraph({
   const [stateM, setStateM] = useState(false);
   const [stateN, setStateN] = useState(false);
   const [stateU, setStateU] = useState(false);
+  const [stateA, setStateA] = useState(false);
 
   // todo できればiroCd(変更していい)を使ってまとめたい
   const iroCd = {
@@ -37,6 +38,9 @@ function NetworkGraph({
   }
   function handleClickC() {
     setStateU(!stateU);
+  }
+  function handleClickD() {
+    setStateA(!stateA);
   }
   // 隣接リストの準備
   const nearestNodeList = useRef({});
@@ -379,6 +383,7 @@ function NetworkGraph({
           }
         });
       }
+
       if (stateN && t.__data__.relation_id === "N") {
         activeLinkIndicesRef.current.add(i);
         strokeColor = "blue";
@@ -396,6 +401,7 @@ function NetworkGraph({
           }
         });
       }
+
       if (stateU && t.__data__.relation_id === "U") {
         activeLinkIndicesRef.current.add(i);
         strokeColor = "green";
@@ -403,6 +409,7 @@ function NetworkGraph({
         markerEnd = `url(#arrow-${i})`;
         markerColor = "green";
         markerOpacity = 1;
+
 
         nodeRef.current.nodes().forEach((t2, i) => {
           if (
@@ -413,6 +420,26 @@ function NetworkGraph({
           }
         });
       }
+
+      if (stateA && t.__data__.relation_id === "A") {
+        activeLinkIndicesRef.current.add(i);
+        strokeColor = "orange";
+        strokeOpacity = 1;
+        markerEnd = `url(#arrow-${i})`;
+        markerColor = "orange";
+        markerOpacity = 1;
+
+
+        nodeRef.current.nodes().forEach((t2, i) => {
+          if (
+            t2.__data__.id == t.__data__.source.id ||
+            t2.__data__.id == t.__data__.target.id
+          ) {
+            d3.select(t2).transition().duration(300).attr("fill-opacity", 1);
+          }
+        });
+      }
+
       d3.select(t)
         .transition()
         .duration(300)
@@ -426,19 +453,22 @@ function NetworkGraph({
         .attr("fill", markerColor)
         .attr("opacity", markerOpacity);
     });
-  }, [stateM, stateN, stateU, initialMount]);
+  }, [stateM, stateN, stateU, stateA, initialMount]);
 
   return (
     <>
       <div className="network-button">
         <button onClick={handleClickA} className={stateM ? "active" : ""}>
-          切り替えA
+          切り替えM
         </button>
         <button onClick={handleClickB} className={stateN ? "active" : ""}>
-          切り替えB
+          切り替えN
         </button>
         <button onClick={handleClickC} className={stateU ? "active" : ""}>
-          切り替えC
+          切り替えU
+        </button>
+        <button onClick={handleClickD} className={stateA ? "active" : ""}>
+          切り替えA
         </button>
       </div>
       <svg ref={svgRef} className="network-graph"></svg>
