@@ -66,7 +66,6 @@ function App() {
                 />
               </div>
               <div className="list-container">
-                <h1>リストの表示</h1>
                 <List 
                   processed_data={processed_data}
                   nodeId={clickedNodeId}
