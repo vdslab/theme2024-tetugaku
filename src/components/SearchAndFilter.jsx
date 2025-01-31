@@ -234,7 +234,7 @@ function SearchAndFilter({
         selectNode(t.name_id);
       }
     });
-  }, [selectedPhilosopher, processed_data, selectNode]);
+  }, [selectedPhilosopher, processed_data]);
 
   // 選択されたグループIDを反映
   useEffect(() => {
