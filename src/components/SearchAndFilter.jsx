@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import "./SearchAndFilter.css";
+import { RedSwitch, BlueSwitch, GreenSwitch, OrangeSwitch } from "./SwitchColor";
 
 function SearchAndFilter({
   processed_data,
   selectNode,
   selectGroup,
   renderComplete,
+  setStateM,
+  setStateN,
+  setStateU,
+  setStateA,
 }) {
   const [searchName, setSearchName] = useState("");
   const [selectedPhilosopher, setSelectedPhilosopher] = useState(null);
-  const [key, setKey] = useState(0); // 再レンダリング用のkeyを管理
-
+  const [key, setKey] = useState(0);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedModes, setSelectedModes] = useState([]);
 
-  //思想家選択用オプション
-  const options = processed_data.names.map((item) => ({
+  const philosopherOptions = processed_data.names.map((item) => ({
     value: item.name,
     label: item.name,
   }));
 
-  //思想家選択用イベントハンドラ
   const handleSelectChange = (selectedOption) => {
     if (selectedOption) {
       setSelectedPhilosopher(selectedOption);
@@ -70,7 +73,53 @@ function SearchAndFilter({
     }
   };
 
-  // スタイル
+  // 関係性のオプション
+  const modeOptions = [
+    { value: "M", label: "師弟", fullLabel: "師弟関係" },
+    { value: "N", label: "批判", fullLabel: "批判的関係" },
+    { value: "U", label: "弁証", fullLabel: "弁証法的関係" },
+    { value: "A", label: "肯定", fullLabel: "肯定的関係" },
+  ];
+
+  const getSwitchByValue = (value, isSelected, onChange) => {
+    switch (value) {
+      case "M":
+        return <RedSwitch checked={isSelected} onChange={onChange} />;
+      case "N":
+        return <BlueSwitch checked={isSelected} onChange={onChange} />;
+      case "U":
+        return <GreenSwitch checked={isSelected} onChange={onChange} />;
+      case "A":
+        return <OrangeSwitch checked={isSelected} onChange={onChange} />;
+    }
+  };
+
+  const SwitchOption = (props) => {
+    const { isSelected, data, selectOption } = props;
+
+    // Switch クリック時のハンドラ
+    const handleSwitchChange = () => {
+      selectOption(data);
+    };
+
+    return (
+      <components.Option {...props}>
+        {getSwitchByValue(data.value, isSelected, handleSwitchChange)}
+        <span style={{ marginLeft: 8 }}>{data.fullLabel}</span>
+      </components.Option>
+    );
+  };
+
+  const handleModeChange = (selectedArray) => {
+    const current = selectedArray || [];
+    setSelectedModes(current);
+    setStateM(current.some((o) => o.value === "M"));
+    setStateN(current.some((o) => o.value === "N"));
+    setStateU(current.some((o) => o.value === "U"));
+    setStateA(current.some((o) => o.value === "A"));
+  };
+
+  // 思想家＆グループ用のセレクトスタイル（通常のもの）
   const customStyles = {
     container: (provided) => ({
       ...provided,
@@ -86,7 +135,56 @@ function SearchAndFilter({
     }),
   };
 
-  // 選択した思想家のidを送信する処理の作成
+  // 関係性のセレクトスタイル（横スクロールを許可＋ホバーはデフォルト色、選択は透明）
+  const customStyles2 = {
+    container: (base) => ({
+      ...base,
+      width: "300px",
+    }),
+    control: (base) => ({
+      ...base,
+      width: "300px",
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      display: "flex",
+      flexWrap: "nowrap",
+      whiteSpace: "nowrap",
+      overflowX: "auto",
+      overflowY: "hidden",
+    }),
+    multiValue: (base) => ({
+      ...base,
+      margin: "2px 4px",
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      whiteSpace: "nowrap",
+      overflow: "visible",
+      textOverflow: "clip",
+      maxWidth: "none",
+    }),
+  
+    // ▼ ここがポイント
+    option: (base, { isFocused, isSelected }) => ({
+      ...base,
+    
+      // 選択されているときだけ背景を透明に
+      backgroundColor: isSelected ? "transparent" : base.backgroundColor,
+    
+      // 文字色は常に React-Select のデフォルトを使う
+      color: "black",
+    
+      // マウスダウン時の反転も透明にしたい場合
+      ":active": {
+       backgroundColor: "transparent",
+      },
+    }),
+    
+  };
+  
+
+  // 選択された思想家のIDを反映
   useEffect(() => {
     if (!selectedPhilosopher) return;
     processed_data.names.forEach((t) => {
@@ -94,48 +192,60 @@ function SearchAndFilter({
         selectNode(t.name_id);
       }
     });
-  }, [selectedPhilosopher]);
+  }, [selectedPhilosopher, processed_data, selectNode]);
 
-  // 選択したグループのidを送信する処理の作成
+  // 選択されたグループIDを反映
   useEffect(() => {
     if (!selectedGroup) return;
     selectGroup(selectedGroup.value);
-  }, [selectedGroup]);
+  }, [selectedGroup, selectGroup]);
 
   return (
-    <>
+    <div className="select-container">
       {/* 思想家を選択 */}
-      <div className="select-container">
-        <div>
-          <Select
-            // keyを変更して再マウント
-            key={key}
-            options={options}
-            value={selectedPhilosopher}
-            onChange={handleSelectChange}
-            onInputChange={handleInputChange}
-            inputValue={searchName}
-            placeholder="思想家を選んでください"
-            isClearable
-            styles={customStyles}
-            isDisabled={!renderComplete}
-          />
-        </div>
+      <Select
+        key={key}
+        options={philosopherOptions}
+        value={selectedPhilosopher}
+        onChange={handleSelectChange}
+        onInputChange={handleInputChange}
+        inputValue={searchName}
+        placeholder="思想家を選んでください"
+        isClearable
+        styles={customStyles}
+        isDisabled={!renderComplete}
+      />
 
-        {/* グループを選択 */}
-        <div>
-          <Select
-            options={groupOptions}
-            value={selectedGroup}
-            onChange={handleGroupChange}
-            placeholder="グループを選んでください"
-            isClearable
-            isSearchable={false}
-            styles={customStyles}
-          />
-        </div>
-      </div>
-    </>
+      
+      {/* グループを選択 */}
+      <Select
+        options={groupOptions}
+        value={selectedGroup}
+        onChange={handleGroupChange}
+        placeholder="グループを選んでください"
+        isClearable
+        isSearchable={false}
+        styles={customStyles}
+      />
+
+      {/* 関係性の選択 */}
+      <Select
+        options={modeOptions}
+        value={selectedModes}
+        onChange={handleModeChange}
+        placeholder="関係性を選択してください"
+        isMulti
+        closeMenuOnSelect={false}
+        hideSelectedOptions={false}
+        components={{ Option: SwitchOption }} // カスタムOptionを差し込む
+        getOptionLabel={(option) => option.label}
+        getOptionValue={(option) => option.value}
+        styles={customStyles2}
+        menuPlacement="auto"
+        menuShouldScrollIntoView={false}
+        isSearchable={false}
+      />
+    </div>
   );
 }
 

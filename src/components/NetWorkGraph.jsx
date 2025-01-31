@@ -8,6 +8,10 @@ function NetworkGraph({
   selectedNodeId,
   selectedGroupId,
   handleRenderComplete,
+  stateM,
+  stateN,
+  stateU,
+  stateA
 }) {
   const [data, setData] = useState(null);
   const svgRef = useRef(null);
@@ -18,30 +22,15 @@ function NetworkGraph({
   // 有向エッジの集合
   const activeLinkIndicesRef = useRef(new Set());
 
-  const [stateM, setStateM] = useState(false);
-  const [stateN, setStateN] = useState(false);
-  const [stateU, setStateU] = useState(false);
-  const [stateA, setStateA] = useState(false);
 
-  // todo できればiroCd(変更していい)を使ってまとめたい
+  // todo 有向エッジの色変更
   const iroCd = {
-    M: "red",
-    N: "blue",
-    U: "green",
+    M: "", //師弟関係
+    N: "", //批判的影響
+    U: "", //弁証法的影響
+    A: ""  //肯定的影響
   };
-  // デバッグ用
-  function handleClickA() {
-    setStateM(!stateM);
-  }
-  function handleClickB() {
-    setStateN(!stateN);
-  }
-  function handleClickC() {
-    setStateU(!stateU);
-  }
-  function handleClickD() {
-    setStateA(!stateA);
-  }
+
   // 隣接リストの準備
   const nearestNodeList = useRef({});
 
@@ -62,7 +51,7 @@ function NetworkGraph({
       .transition()
       .duration(300)
       .attr("fill-opacity", (d) => {
-        return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.05;
+        return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.15;
       });
     linkRef.current
       .transition()
@@ -82,11 +71,11 @@ function NetworkGraph({
             return activeLinkIndicesRef.current.has(l.index)
               ? isHighlighted
                 ? 1
-                : 0.05
+                : 0.15
               : 0;
           });
 
-        return isHighlighted ? 1 : 0.05;
+        return isHighlighted ? 1 : 0.15;
       });
   };
 
@@ -171,7 +160,7 @@ function NetworkGraph({
         return Math.sqrt(d.value);
       })
       .attr("stroke", "black")
-      .attr("stroke-opacity", 0.05);
+      .attr("stroke-opacity", 0.15);
 
     // ノードの描画
     const node = svgGroup
@@ -185,7 +174,7 @@ function NetworkGraph({
       .attr("fill", function (d) {
         return color(d.group);
       })
-      .attr("fill-opacity", 0.05)
+      .attr("fill-opacity", 0.15)
       .on("click.select", selectByNodeClick)
       .on("click.zoom", zoomByNodeClick)
       .on("mouseover.highlight", highlightByNodeClick);
@@ -217,7 +206,7 @@ function NetworkGraph({
         d3
           .forceLink(data.links)
           .id((d) => d.id)
-          .distance(70)
+          .distance(80)
       )
       .force("charge", d3.forceManyBody().strength(-100))
       .force("center", d3.forceCenter(250, 250))
@@ -358,20 +347,20 @@ function NetworkGraph({
     activeLinkIndicesRef.current.clear();
     // state変更時、nodeのopacityを初期化
     nodeRef.current.nodes().forEach((t, i) => {
-      d3.select(t).transition().duration(300).attr("fill-opacity", 0.05);
+      d3.select(t).transition().duration(300).attr("fill-opacity", 0.15);
     });
 
     linkRef.current.nodes().forEach((t, i) => {
       let strokeColor = "black";
-      let strokeOpacity = 0.05;
+      let strokeOpacity = 0.15;
       let markerEnd = `url(#arrow-${i})`;
       let markerColor = "black";
       let markerOpacity = 0;
       if (stateM && t.__data__.relation_id === "M") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = "red";
+        strokeColor = iroCd['M'];
         strokeOpacity = 1;
-        markerColor = "red";
+        markerColor = iroCd['M'];
         markerOpacity = 1;
 
         nodeRef.current.nodes().forEach((t2, i) => {
@@ -386,10 +375,10 @@ function NetworkGraph({
 
       if (stateN && t.__data__.relation_id === "N") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = "blue";
+        strokeColor = iroCd['N'];
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-        markerColor = "blue";
+        markerColor = iroCd['N'];
         markerOpacity = 1;
 
         nodeRef.current.nodes().forEach((t2, i) => {
@@ -404,10 +393,10 @@ function NetworkGraph({
 
       if (stateU && t.__data__.relation_id === "U") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = "green";
+        strokeColor = iroCd['U'];
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-        markerColor = "green";
+        markerColor = iroCd['U'];
         markerOpacity = 1;
 
 
@@ -423,10 +412,10 @@ function NetworkGraph({
 
       if (stateA && t.__data__.relation_id === "A") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = "orange";
+        strokeColor = iroCd['A'];
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-        markerColor = "orange";
+        markerColor = iroCd['A'];
         markerOpacity = 1;
 
 
@@ -456,23 +445,7 @@ function NetworkGraph({
   }, [stateM, stateN, stateU, stateA, initialMount]);
 
   return (
-    <>
-      <div className="network-button">
-        <button onClick={handleClickA} className={stateM ? "active" : ""}>
-          切り替えM
-        </button>
-        <button onClick={handleClickB} className={stateN ? "active" : ""}>
-          切り替えN
-        </button>
-        <button onClick={handleClickC} className={stateU ? "active" : ""}>
-          切り替えU
-        </button>
-        <button onClick={handleClickD} className={stateA ? "active" : ""}>
-          切り替えA
-        </button>
-      </div>
       <svg ref={svgRef} className="network-graph"></svg>
-    </>
   );
 }
 
