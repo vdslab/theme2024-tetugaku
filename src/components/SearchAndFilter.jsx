@@ -146,15 +146,24 @@ function SearchAndFilter({
     }),
   };
 
-  // 関係性のセレクトスタイル（横スクロールを許可＋ホバーはデフォルト色、選択は透明）
+  // 透明度を追加する為、rgba表記に修正
+  const getOptionColor = (value, opacity = 0.8) => {
+    switch (value) {
+      case "U": return `rgba(208, 96, 152, ${opacity})`;  // 弁証
+      case "A": return `rgba(91, 67, 255, ${opacity})`;   // 肯定
+      case "N": return `rgba(217, 128, 80, ${opacity})`;  // 批判
+      case "M": return `rgba(130, 188, 138, ${opacity})`; // 師弟
+    }
+  };
+  
   const customStyles2 = {
     container: (base) => ({
       ...base,
-      width: "280px",
+      width: "300px",
     }),
     control: (base) => ({
       ...base,
-      width: "280px",
+      width: "300px",
       fontSize: "14px",
     }),
     valueContainer: (base) => ({
@@ -165,20 +174,41 @@ function SearchAndFilter({
       overflowX: "auto",
       overflowY: "hidden",
     }),
-    multiValue: (base) => ({
+    clearIndicator: (base) => ({
       ...base,
-      margin: "2px 4px",
+      fontSize: "12px",
+      padding: "1px",
+      width: "16px",
+      height: "16px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     }),
-    multiValueLabel: (base) => ({
+    multiValue: (base, { data }) => ({
       ...base,
-      whiteSpace: "nowrap",
-      overflow: "visible",
-      textOverflow: "clip",
-      maxWidth: "none",
-      fontSize: "14px",
+      margin: "1.5px 3px",
+      backgroundColor: getOptionColor(data.value), // 背景色
+      
+      borderRadius: "10px",
+    }),
+    multiValueLabel: (base, { data }) => ({
+      ...base,
+      color: "white", // ラベルの色を白に統一
+      fontWeight: "bold",
+    }),
+    multiValueRemove: (base, { data }) => ({
+      ...base,
+      color: "white", // 削除ボタンの色を白に統一
+      borderRadius: "20px",
+      fontSize: "6px", // ✖ボタンを小さく
+      padding: "1px", // パディングを小さくして、ボタンを縮小
+      
+      ":hover": {
+        backgroundColor: getOptionColor(data.value), // ホバー時の背景色
+        color: "black",
+      },
     }),
   
-    // ▼ ここがポイント
     option: (base, { isFocused, isSelected }) => ({
       ...base,
     
@@ -193,7 +223,6 @@ function SearchAndFilter({
        backgroundColor: "transparent",
       },
     }),
-    
   };
   
 
