@@ -75,10 +75,10 @@ function SearchAndFilter({
 
   // 関係性のオプション
   const modeOptions = [
-    { value: "M", label: "師弟", fullLabel: "師弟関係" },
-    { value: "N", label: "批判", fullLabel: "批判的関係" },
     { value: "U", label: "弁証", fullLabel: "弁証法的関係" },
     { value: "A", label: "肯定", fullLabel: "肯定的関係" },
+    { value: "N", label: "批判", fullLabel: "批判的関係" },
+    { value: "M", label: "師弟", fullLabel: "師弟関係" },
   ];
 
   const getSwitchByValue = (value, isSelected, onChange) => {
