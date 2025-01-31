@@ -252,7 +252,7 @@ function SearchAndFilter({
         options={modeOptions}
         value={selectedModes}
         onChange={handleModeChange}
-        placeholder="関係性を選択してください"
+        placeholder="関係性を選んでください"
         isMulti
         closeMenuOnSelect={false}
         hideSelectedOptions={false}
