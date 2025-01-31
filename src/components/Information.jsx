@@ -46,7 +46,7 @@ function Information({ processed_data, nodeId }) {
 
   return (
     <div className="information-container">
-      <div className="information-header">Information</div>
+      <div className="information-header">解説</div>
       <div className="information-content">
         <h2 className="text-xl font-bold mb-4">{philosopherName}</h2>
         <div className="space-y-4">
