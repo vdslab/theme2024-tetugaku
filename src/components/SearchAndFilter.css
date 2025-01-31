@@ -12,11 +12,13 @@
   background-color: #f5f5f5;
   border: 1px solid #ccc;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s;
   font-size: 14px;
   color: #a1a1a1;
+  font-family: "刻明朝";
+  letter-spacing: 0.15em;
 }
 
 .random-button:hover {

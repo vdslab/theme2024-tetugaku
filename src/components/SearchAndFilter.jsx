@@ -247,7 +247,7 @@ function SearchAndFilter({
 
       <button onClick={handleRandomSelect} className="random-button">
         <img src={randomIcon} alt="ランダム" className="random-icon" />
-        ランダム選択
+        ランダム
       </button>
       
       {/* 思想家を選択 */}
