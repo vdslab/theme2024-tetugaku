@@ -87,7 +87,7 @@ function NetworkGraph({
       .transition()
       .duration(300)
       .attr("fill-opacity", (d) =>
-        highlightedNodeIds.has(d.id) ? 1 : 0.15
+        (clickedNode.id === d.id || highlightedNodeIds.has(d.id)) ? 1 : 0.15
       );
   };
 
