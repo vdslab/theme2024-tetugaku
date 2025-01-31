@@ -11,7 +11,7 @@ function NetworkGraph({
   stateM,
   stateN,
   stateU,
-  stateA
+  stateA,
 }) {
   const [data, setData] = useState(null);
   const svgRef = useRef(null);
@@ -22,13 +22,12 @@ function NetworkGraph({
   // 有向エッジの集合
   const activeLinkIndicesRef = useRef(new Set());
 
-
   // todo 有向エッジの色変更
   const iroCd = {
-    M: "", //師弟関係
-    N: "", //批判的影響
-    U: "", //弁証法的影響
-    A: ""  //肯定的影響
+    M: "#82BC8A", //師弟関係
+    N: "#D98050", //批判的影響
+    U: "#D06098", //弁証法的影響
+    A: "#5B43FF", //肯定的影響
   };
 
   // 隣接リストの準備
@@ -60,9 +59,9 @@ function NetworkGraph({
         const sourceId = typeof l.source === "object" ? l.source.id : l.source;
         const targetId = typeof l.target === "object" ? l.target.id : l.target;
 
-        const isHighlighted =
-          sourceId === clickedNode.id || targetId === clickedNode.id;
-
+        // const isHighlighted =
+        //   sourceId === clickedNode.id || targetId === clickedNode.id;
+        const isHighlighted = targetId === clickedNode.id;
         // マーカーの透明度を更新
         d3.select(`#arrow-${l.index} path`)
           .transition()
@@ -358,9 +357,9 @@ function NetworkGraph({
       let markerOpacity = 0;
       if (stateM && t.__data__.relation_id === "M") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = iroCd['M'];
+        strokeColor = iroCd["M"];
         strokeOpacity = 1;
-        markerColor = iroCd['M'];
+        markerColor = iroCd["M"];
         markerOpacity = 1;
 
         nodeRef.current.nodes().forEach((t2, i) => {
@@ -375,10 +374,10 @@ function NetworkGraph({
 
       if (stateN && t.__data__.relation_id === "N") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = iroCd['N'];
+        strokeColor = iroCd["N"];
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-        markerColor = iroCd['N'];
+        markerColor = iroCd["N"];
         markerOpacity = 1;
 
         nodeRef.current.nodes().forEach((t2, i) => {
@@ -393,12 +392,11 @@ function NetworkGraph({
 
       if (stateU && t.__data__.relation_id === "U") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = iroCd['U'];
+        strokeColor = iroCd["U"];
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-        markerColor = iroCd['U'];
+        markerColor = iroCd["U"];
         markerOpacity = 1;
-
 
         nodeRef.current.nodes().forEach((t2, i) => {
           if (
@@ -412,12 +410,11 @@ function NetworkGraph({
 
       if (stateA && t.__data__.relation_id === "A") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = iroCd['A'];
+        strokeColor = iroCd["A"];
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-        markerColor = iroCd['A'];
+        markerColor = iroCd["A"];
         markerOpacity = 1;
-
 
         nodeRef.current.nodes().forEach((t2, i) => {
           if (
@@ -444,9 +441,7 @@ function NetworkGraph({
     });
   }, [stateM, stateN, stateU, stateA, initialMount]);
 
-  return (
-      <svg ref={svgRef} className="network-graph"></svg>
-  );
+  return <svg ref={svgRef} className="network-graph"></svg>;
 }
 
 export default NetworkGraph;
