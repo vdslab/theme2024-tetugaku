@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select, { components } from "react-select";
-import { Switch } from "@mui/material"; // MUI Switch
 import "./SearchAndFilter.css";
+import { RedSwitch, BlueSwitch, GreenSwitch, OrangeSwitch } from "./SwitchColor";
 
 function SearchAndFilter({
   processed_data,
@@ -12,18 +12,11 @@ function SearchAndFilter({
   setStateN,
   setStateU,
   setStateA,
-  stateM,
-  stateN,
-  stateU,
-  stateA,
 }) {
   const [searchName, setSearchName] = useState("");
   const [selectedPhilosopher, setSelectedPhilosopher] = useState(null);
-  const [key, setKey] = useState(0); // 再レンダリング用のkeyを管理
-
+  const [key, setKey] = useState(0);
   const [selectedGroup, setSelectedGroup] = useState(null);
-
-  // エッジのモード選択
   const [selectedModes, setSelectedModes] = useState([]);
 
   const philosopherOptions = processed_data.names.map((item) => ({
@@ -31,7 +24,6 @@ function SearchAndFilter({
     label: item.name,
   }));
 
-  //思想家選択用イベントハンドラ
   const handleSelectChange = (selectedOption) => {
     if (selectedOption) {
       setSelectedPhilosopher(selectedOption);
@@ -81,57 +73,53 @@ function SearchAndFilter({
     }
   };
 
-  // ▼ M, N, U, A の複数選択オプション
+  // 関係性のオプション
   const modeOptions = [
-    { value: "M", label: "師弟関係" },
-    { value: "N", label: "批判的影響" },
-    { value: "U", label: "弁証法的影響" },
-    { value: "A", label: "肯定的影響" },
+    { value: "M", label: "師弟", fullLabel: "師弟関係" },
+    { value: "N", label: "批判", fullLabel: "批判的関係" },
+    { value: "U", label: "弁証", fullLabel: "弁証法的関係" },
+    { value: "A", label: "肯定", fullLabel: "肯定的関係" },
   ];
 
-  // ▼ react-selectで、選択肢をクリックするときに表示するカスタムOption
-  //    各OptionにMUIのSwitchを置いています
+  const getSwitchByValue = (value, isSelected, onChange) => {
+    switch (value) {
+      case "M":
+        return <RedSwitch checked={isSelected} onChange={onChange} />;
+      case "N":
+        return <BlueSwitch checked={isSelected} onChange={onChange} />;
+      case "U":
+        return <GreenSwitch checked={isSelected} onChange={onChange} />;
+      case "A":
+        return <OrangeSwitch checked={isSelected} onChange={onChange} />;
+    }
+  };
+
   const SwitchOption = (props) => {
-    const { children, isSelected, data, selectOption } = props;
+    const { isSelected, data, selectOption } = props;
+
+    // Switch クリック時のハンドラ
+    const handleSwitchChange = () => {
+      selectOption(data);
+    };
+
     return (
       <components.Option {...props}>
-        <Switch
-          checked={isSelected}
-          onChange={() => selectOption(data)}
-          color="primary"
-        />
-        <span style={{ marginLeft: 8 }}>{children}</span>
+        {getSwitchByValue(data.value, isSelected, handleSwitchChange)}
+        <span style={{ marginLeft: 8 }}>{data.fullLabel}</span>
       </components.Option>
     );
   };
 
-  // ▼ Switchを複数選択した結果を stateM, stateN, stateU, stateA に反映
   const handleModeChange = (selectedArray) => {
     const current = selectedArray || [];
     setSelectedModes(current);
-
     setStateM(current.some((o) => o.value === "M"));
     setStateN(current.some((o) => o.value === "N"));
     setStateU(current.some((o) => o.value === "U"));
     setStateA(current.some((o) => o.value === "A"));
   };
 
-  // ▼ 選択したアイテムをメインのコントロールに表示しないためのカスタムコンポーネント
-  //    これで「タグ」を非表示にしてしまう
-  const MultiValue = () => null;
-
-  // ▼ もし何も選択されていないときはプレースホルダーを出し、
-  //    1つでも選択されていたらプレースホルダーを消す
-  const Placeholder = (props) => {
-    // 既に何か選択されているなら、プレースホルダーは表示しない
-    // if (props.selectProps.value && props.selectProps.value.length) {
-    //   return null;
-    // }
-    // 何も選択されていないときは、標準のPlaceholderを返す
-    return <components.Placeholder {...props} />;
-  };
-
-  // ▼ react-selectのスタイル調整
+  // 思想家＆グループ用のセレクトスタイル（通常のもの）
   const customStyles = {
     container: (provided) => ({
       ...provided,
@@ -147,7 +135,56 @@ function SearchAndFilter({
     }),
   };
 
-  // 選択した思想家のidを送信する処理の作成
+  // 関係性のセレクトスタイル（横スクロールを許可＋ホバーはデフォルト色、選択は透明）
+  const customStyles2 = {
+    container: (base) => ({
+      ...base,
+      width: "300px",
+    }),
+    control: (base) => ({
+      ...base,
+      width: "300px",
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      display: "flex",
+      flexWrap: "nowrap",
+      whiteSpace: "nowrap",
+      overflowX: "auto",
+      overflowY: "hidden",
+    }),
+    multiValue: (base) => ({
+      ...base,
+      margin: "2px 4px",
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      whiteSpace: "nowrap",
+      overflow: "visible",
+      textOverflow: "clip",
+      maxWidth: "none",
+    }),
+  
+    // ▼ ここがポイント
+    option: (base, { isFocused, isSelected }) => ({
+      ...base,
+    
+      // 選択されているときだけ背景を透明に
+      backgroundColor: isSelected ? "transparent" : base.backgroundColor,
+    
+      // 文字色は常に React-Select のデフォルトを使う
+      color: "black",
+    
+      // マウスダウン時の反転も透明にしたい場合
+      ":active": {
+       backgroundColor: "transparent",
+      },
+    }),
+    
+  };
+  
+
+  // 選択された思想家のIDを反映
   useEffect(() => {
     if (!selectedPhilosopher) return;
     processed_data.names.forEach((t) => {
@@ -155,13 +192,13 @@ function SearchAndFilter({
         selectNode(t.name_id);
       }
     });
-  }, [selectedPhilosopher]);
+  }, [selectedPhilosopher, processed_data, selectNode]);
 
-  // 選択したグループのidを送信する処理の作成
+  // 選択されたグループIDを反映
   useEffect(() => {
     if (!selectedGroup) return;
     selectGroup(selectedGroup.value);
-  }, [selectedGroup]);
+  }, [selectedGroup, selectGroup]);
 
   return (
     <div className="select-container">
@@ -191,23 +228,22 @@ function SearchAndFilter({
         styles={customStyles}
       />
 
-      {/* 有向エッジのタイプを選択 */}
+      {/* 関係性の選択 */}
       <Select
         options={modeOptions}
         value={selectedModes}
         onChange={handleModeChange}
-        placeholder="影響の種類を選択してください"
+        placeholder="関係性を選択してください"
         isMulti
-        closeMenuOnSelect={false}  // Switchクリックでメニューが閉じないように
+        closeMenuOnSelect={false}
         hideSelectedOptions={false}
-        components={{
-          Option: SwitchOption,
-          MultiValue,
-          Placeholder,
-        }}
-        styles={customStyles}
+        components={{ Option: SwitchOption }} // カスタムOptionを差し込む
+        getOptionLabel={(option) => option.label}
+        getOptionValue={(option) => option.value}
+        styles={customStyles2}
         menuPlacement="auto"
         menuShouldScrollIntoView={false}
+        isSearchable={false}
       />
     </div>
   );

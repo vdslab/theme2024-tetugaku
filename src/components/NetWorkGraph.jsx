@@ -23,11 +23,12 @@ function NetworkGraph({
   const activeLinkIndicesRef = useRef(new Set());
 
 
-  // todo できればiroCd(変更していい)を使ってまとめたい
+  // todo 有向エッジの色変更
   const iroCd = {
-    M: "red",
-    N: "blue",
-    U: "green",
+    M: "", //師弟関係
+    N: "", //批判的影響
+    U: "", //弁証法的影響
+    A: ""  //肯定的影響
   };
 
   // 隣接リストの準備
@@ -357,9 +358,9 @@ function NetworkGraph({
       let markerOpacity = 0;
       if (stateM && t.__data__.relation_id === "M") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = "red";
+        strokeColor = iroCd['M'];
         strokeOpacity = 1;
-        markerColor = "red";
+        markerColor = iroCd['M'];
         markerOpacity = 1;
 
         nodeRef.current.nodes().forEach((t2, i) => {
@@ -374,10 +375,10 @@ function NetworkGraph({
 
       if (stateN && t.__data__.relation_id === "N") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = "blue";
+        strokeColor = iroCd['N'];
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-        markerColor = "blue";
+        markerColor = iroCd['N'];
         markerOpacity = 1;
 
         nodeRef.current.nodes().forEach((t2, i) => {
@@ -392,10 +393,10 @@ function NetworkGraph({
 
       if (stateU && t.__data__.relation_id === "U") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = "green";
+        strokeColor = iroCd['U'];
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-        markerColor = "green";
+        markerColor = iroCd['U'];
         markerOpacity = 1;
 
 
@@ -411,10 +412,10 @@ function NetworkGraph({
 
       if (stateA && t.__data__.relation_id === "A") {
         activeLinkIndicesRef.current.add(i);
-        strokeColor = "orange";
+        strokeColor = iroCd['A'];
         strokeOpacity = 1;
         markerEnd = `url(#arrow-${i})`;
-        markerColor = "orange";
+        markerColor = iroCd['A'];
         markerOpacity = 1;
 
 
