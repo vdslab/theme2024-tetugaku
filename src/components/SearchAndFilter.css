@@ -4,3 +4,29 @@
   padding: 15px;
   align-items: center;
 }
+
+/* randomボタンのデザイン */
+.random-button {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  color: #a1a1a1;
+}
+
+.random-button:hover {
+  background-color: #e0e0e0;
+}
+
+.random-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  filter: grayscale(100%);
+}
+

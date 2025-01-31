@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Select, { components } from "react-select";
 import "./SearchAndFilter.css";
 import { RedSwitch, BlueSwitch, GreenSwitch, OrangeSwitch } from "./SwitchColor";
+import randomIcon from "./images/ei-random.svg";
 
 function SearchAndFilter({
   processed_data,
@@ -119,6 +120,16 @@ function SearchAndFilter({
     setStateA(current.some((o) => o.value === "A"));
   };
 
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+
+  const handleRandomSelect = () => {
+    // randomで30人から1人を選ぶ
+    console.log(getRandomInt(30));
+    selectNode(getRandomInt(30));
+  }
+
   // 思想家＆グループ用のセレクトスタイル（通常のもの）
   const customStyles = {
     container: (provided) => ({
@@ -139,11 +150,12 @@ function SearchAndFilter({
   const customStyles2 = {
     container: (base) => ({
       ...base,
-      width: "300px",
+      width: "280px",
     }),
     control: (base) => ({
       ...base,
-      width: "300px",
+      width: "280px",
+      fontSize: "14px",
     }),
     valueContainer: (base) => ({
       ...base,
@@ -163,6 +175,7 @@ function SearchAndFilter({
       overflow: "visible",
       textOverflow: "clip",
       maxWidth: "none",
+      fontSize: "14px",
     }),
   
     // ▼ ここがポイント
@@ -202,6 +215,12 @@ function SearchAndFilter({
 
   return (
     <div className="select-container">
+
+      <button onClick={handleRandomSelect} className="random-button">
+        <img src={randomIcon} alt="ランダム" className="random-icon" />
+        ランダム選択
+      </button>
+      
       {/* 思想家を選択 */}
       <Select
         key={key}
