@@ -45,13 +45,8 @@ function NetworkGraph({
 
   // ノードクリックでノードとエッジをハイライト表示
   const highlightByNodeClick = (e, clickedNode) => {
-    const nearests = nearestNodeList.current[clickedNode.id];
-    nodeRef.current
-      .transition()
-      .duration(300)
-      .attr("fill-opacity", (d) => {
-        return d.id === clickedNode.id || nearests.has(d.id) ? 1 : 0.15;
-      });
+    const highlightedEdgeIndices = new Set();
+    const highlightedNodeIds = new Set();
     linkRef.current
       .transition()
       .duration(300)
@@ -59,23 +54,41 @@ function NetworkGraph({
         const sourceId = typeof l.source === "object" ? l.source.id : l.source;
         const targetId = typeof l.target === "object" ? l.target.id : l.target;
 
-        // const isHighlighted =
-        //   sourceId === clickedNode.id || targetId === clickedNode.id;
-        const isHighlighted = targetId === clickedNode.id;
+        const isHighlighted1 = sourceId === clickedNode.id || targetId === clickedNode.id;
+        const isHighlighted2 = targetId === clickedNode.id;
+
+        // どちらかの条件でリンクをハイライト
+        const isEdgeHighlighted =
+          isHighlighted2 ||
+          (isHighlighted1 && !activeLinkIndicesRef.current.has(l.index));
+
         // マーカーの透明度を更新
         d3.select(`#arrow-${l.index} path`)
           .transition()
           .duration(300)
-          .attr("opacity", () => {
-            return activeLinkIndicesRef.current.has(l.index)
-              ? isHighlighted
+          .attr("opacity", () =>
+            activeLinkIndicesRef.current.has(l.index)
+              ? isHighlighted2
                 ? 1
                 : 0.15
-              : 0;
-          });
+              : 0
+          );
 
-        return isHighlighted ? 1 : 0.15;
+        if (isEdgeHighlighted) {
+          highlightedEdgeIndices.add(l.index);
+          highlightedNodeIds.add(sourceId);
+          highlightedNodeIds.add(targetId);
+        }
+
+        return isEdgeHighlighted ? 1 : 0.15;
       });
+
+    nodeRef.current
+      .transition()
+      .duration(300)
+      .attr("fill-opacity", (d) =>
+        highlightedNodeIds.has(d.id) ? 1 : 0.15
+      );
   };
 
   // グラフの描画
