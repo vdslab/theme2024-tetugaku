@@ -13,6 +13,10 @@ function App() {
   const [renderComplete, setRenderComplete] = useState(null);
 
   const [highlightNode,setHighlightNode] = useState([]);
+  const [stateM, setStateM] = useState(false);
+  const [stateN, setStateN] = useState(false);
+  const [stateU, setStateU] = useState(false);
+  const [stateA, setStateA] = useState(false);
 
   // ノードクリックを感知して、idをclickedNodeIdにセット
   const handleSetNodeId = (newNodeId) => {
@@ -41,6 +45,14 @@ function App() {
             selectNode={handleSetNodeId}
             selectGroup={handleSetGroupId}
             renderComplete={renderComplete}
+            setStateM={setStateM}
+            setStateN={setStateN}
+            setStateU={setStateU}
+            setStateA={setStateA}
+            stateM={stateM}
+            stateN={stateN}
+            stateU={stateU}
+            stateA={stateA}
           />
         </div>
       </header>
@@ -84,6 +96,10 @@ function App() {
                 selectedNodeId={clickedNodeId}
                 selectedGroupId={selectedGroupId}
                 handleRenderComplete={handleRenderComplete}
+                stateM={stateM}
+                stateN={stateN}
+                stateU={stateU}
+                stateA={stateA}
               />
             </div>
             <div className="book-container">

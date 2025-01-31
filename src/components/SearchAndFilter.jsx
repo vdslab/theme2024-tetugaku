@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
+import Select, { components } from "react-select";
+import { Switch } from "@mui/material"; // MUI Switch
 import "./SearchAndFilter.css";
 
 function SearchAndFilter({
@@ -7,6 +8,14 @@ function SearchAndFilter({
   selectNode,
   selectGroup,
   renderComplete,
+  setStateM,
+  setStateN,
+  setStateU,
+  setStateA,
+  stateM,
+  stateN,
+  stateU,
+  stateA,
 }) {
   const [searchName, setSearchName] = useState("");
   const [selectedPhilosopher, setSelectedPhilosopher] = useState(null);
@@ -14,8 +23,10 @@ function SearchAndFilter({
 
   const [selectedGroup, setSelectedGroup] = useState(null);
 
-  //思想家選択用オプション
-  const options = processed_data.names.map((item) => ({
+  // エッジのモード選択
+  const [selectedModes, setSelectedModes] = useState([]);
+
+  const philosopherOptions = processed_data.names.map((item) => ({
     value: item.name,
     label: item.name,
   }));
@@ -70,7 +81,57 @@ function SearchAndFilter({
     }
   };
 
-  // スタイル
+  // ▼ M, N, U, A の複数選択オプション
+  const modeOptions = [
+    { value: "M", label: "師弟関係" },
+    { value: "N", label: "批判的影響" },
+    { value: "U", label: "弁証法的影響" },
+    { value: "A", label: "肯定的影響" },
+  ];
+
+  // ▼ react-selectで、選択肢をクリックするときに表示するカスタムOption
+  //    各OptionにMUIのSwitchを置いています
+  const SwitchOption = (props) => {
+    const { children, isSelected, data, selectOption } = props;
+    return (
+      <components.Option {...props}>
+        <Switch
+          checked={isSelected}
+          onChange={() => selectOption(data)}
+          color="primary"
+        />
+        <span style={{ marginLeft: 8 }}>{children}</span>
+      </components.Option>
+    );
+  };
+
+  // ▼ Switchを複数選択した結果を stateM, stateN, stateU, stateA に反映
+  const handleModeChange = (selectedArray) => {
+    const current = selectedArray || [];
+    setSelectedModes(current);
+
+    setStateM(current.some((o) => o.value === "M"));
+    setStateN(current.some((o) => o.value === "N"));
+    setStateU(current.some((o) => o.value === "U"));
+    setStateA(current.some((o) => o.value === "A"));
+  };
+
+  // ▼ 選択したアイテムをメインのコントロールに表示しないためのカスタムコンポーネント
+  //    これで「タグ」を非表示にしてしまう
+  const MultiValue = () => null;
+
+  // ▼ もし何も選択されていないときはプレースホルダーを出し、
+  //    1つでも選択されていたらプレースホルダーを消す
+  const Placeholder = (props) => {
+    // 既に何か選択されているなら、プレースホルダーは表示しない
+    // if (props.selectProps.value && props.selectProps.value.length) {
+    //   return null;
+    // }
+    // 何も選択されていないときは、標準のPlaceholderを返す
+    return <components.Placeholder {...props} />;
+  };
+
+  // ▼ react-selectのスタイル調整
   const customStyles = {
     container: (provided) => ({
       ...provided,
@@ -103,39 +164,52 @@ function SearchAndFilter({
   }, [selectedGroup]);
 
   return (
-    <>
+    <div className="select-container">
       {/* 思想家を選択 */}
-      <div className="select-container">
-        <div>
-          <Select
-            // keyを変更して再マウント
-            key={key}
-            options={options}
-            value={selectedPhilosopher}
-            onChange={handleSelectChange}
-            onInputChange={handleInputChange}
-            inputValue={searchName}
-            placeholder="思想家を選んでください"
-            isClearable
-            styles={customStyles}
-            isDisabled={!renderComplete}
-          />
-        </div>
+      <Select
+        key={key}
+        options={philosopherOptions}
+        value={selectedPhilosopher}
+        onChange={handleSelectChange}
+        onInputChange={handleInputChange}
+        inputValue={searchName}
+        placeholder="思想家を選んでください"
+        isClearable
+        styles={customStyles}
+        isDisabled={!renderComplete}
+      />
 
-        {/* グループを選択 */}
-        <div>
-          <Select
-            options={groupOptions}
-            value={selectedGroup}
-            onChange={handleGroupChange}
-            placeholder="グループを選んでください"
-            isClearable
-            isSearchable={false}
-            styles={customStyles}
-          />
-        </div>
-      </div>
-    </>
+      
+      {/* グループを選択 */}
+      <Select
+        options={groupOptions}
+        value={selectedGroup}
+        onChange={handleGroupChange}
+        placeholder="グループを選んでください"
+        isClearable
+        isSearchable={false}
+        styles={customStyles}
+      />
+
+      {/* 有向エッジのタイプを選択 */}
+      <Select
+        options={modeOptions}
+        value={selectedModes}
+        onChange={handleModeChange}
+        placeholder="影響の種類を選択してください"
+        isMulti
+        closeMenuOnSelect={false}  // Switchクリックでメニューが閉じないように
+        hideSelectedOptions={false}
+        components={{
+          Option: SwitchOption,
+          MultiValue,
+          Placeholder,
+        }}
+        styles={customStyles}
+        menuPlacement="auto"
+        menuShouldScrollIntoView={false}
+      />
+    </div>
   );
 }
 
