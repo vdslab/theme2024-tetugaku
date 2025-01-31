@@ -154,7 +154,7 @@ function NetworkGraph({
     const svgGroup = svg.append("g").attr("class", "main-group");
 
     // scaleOrdinalの引数は色範囲
-    // 後程でるgroupの個数がドメイン
+    // groupの個数がドメイン
     // ドメインの長さが範囲を超過する場合、範囲が循環して利用される
     const color = d3
       .scaleOrdinal()
@@ -171,7 +171,7 @@ function NetworkGraph({
       .attr("stroke-width", function (d) {
         return Math.sqrt(d.value);
       })
-      .attr("stroke", "black")
+      .attr("stroke", "#737373")
       .attr("stroke-opacity", 0.15);
 
     // ノードの描画
@@ -201,7 +201,7 @@ function NetworkGraph({
       .attr("text-anchor", "middle")
       .attr("dy", -10)
       .attr("font-size", "11px")
-      .attr("fill", "#454545")
+      .attr("fill", "#737373")
       .text((d) => {
         // names配列の中から対応するIDのオブジェクトを探して name を返す
         const nameObj = data.names?.find((n) => n.name_id === d.id);
@@ -363,10 +363,10 @@ function NetworkGraph({
     });
 
     linkRef.current.nodes().forEach((t, i) => {
-      let strokeColor = "black";
+      let strokeColor = "#737373";
       let strokeOpacity = 0.15;
       let markerEnd = `url(#arrow-${i})`;
-      let markerColor = "black";
+      let markerColor = "#737373";
       let markerOpacity = 0;
       if (stateM && t.__data__.relation_id === "M") {
         activeLinkIndicesRef.current.add(i);
