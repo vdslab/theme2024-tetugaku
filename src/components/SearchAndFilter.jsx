@@ -270,7 +270,7 @@ function SearchAndFilter({
         options={groupOptions}
         value={selectedGroup}
         onChange={handleGroupChange}
-        placeholder="グループを選んでください"
+        placeholder="時代を選んでください"
         isClearable
         isSearchable={false}
         styles={customStyles}
