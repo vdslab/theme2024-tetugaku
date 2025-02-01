@@ -311,7 +311,6 @@ function NetworkGraph({
     }
   }, [selectedNodeId, data]);
 
-  // selectedGroupIdを持つノードの中心座標(平均)を計算して移動
   useEffect(() => {
     if (!data || !selectedGroupId) return;
 
@@ -326,13 +325,35 @@ function NetworkGraph({
 
     // 重心に向けてズーム
     let centerX = selectedGroupId === 100 ? 315 : 250;
+    let centerY = selectedGroupId === 100 ? 390 : 250;    
     let sscale = selectedGroupId === 100 ? 0.6 : 1;
-    const toCenter = d3.zoomIdentity.translate(centerX - avgX, 250 - avgY).scale(sscale);
+    const toCenter = d3.zoomIdentity.translate(centerX - avgX, centerY - avgY).scale(sscale);
 
     d3.select(svgRef.current)
       .transition()
       .duration(750)
       .call(zoomInstance.current.transform, toCenter);
+  
+    nodeRef.current
+      .transition()
+      .duration(300)
+      .attr("fill-opacity", (nodeData) => {
+        // group が selectedGroupId と一致するノードだけ濃く、その他は薄く
+        return nodeData.group === selectedGroupId ? 1 : 0.15;
+      });
+  
+    linkRef.current
+      .transition()
+      .duration(300)
+      .attr("stroke-opacity", 0.15)
+      .each((linkData) => {
+
+        d3.select(`#arrow-${linkData.index} path`)
+          .transition()
+          .duration(300)
+          .attr("opacity", 0.15);
+      });
+  
   }, [selectedGroupId, data]);
 
   // プラトンの座標を初期値として登録
