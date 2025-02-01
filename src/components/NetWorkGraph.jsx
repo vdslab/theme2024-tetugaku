@@ -218,12 +218,12 @@ function NetworkGraph({
         d3
           .forceLink(data.links)
           .id((d) => d.id)
-          .distance(90)
+          .distance(100)
       )
       .force("charge", d3.forceManyBody().strength(-100))
       .force("center", d3.forceCenter(250, 250))
       .force("x", d3.forceX(250).strength(0.01))
-      .force("y", d3.forceY(250).strength(0.005));
+      .force("y", d3.forceY(250).strength(0.004));
 
     // シミュレーション
     simulation.on("tick", () => {
