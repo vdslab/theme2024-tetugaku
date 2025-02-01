@@ -308,79 +308,73 @@
             "source": 4,
             "target": 5,
             "relation_id": "M",
-            "relation_info": "adwawda"
+            "relation_info": "ソクラテスの弟子として対話法を学び、対話を通じて普遍的な真理を追求する方法を重視した"
         },
         {
             "source": 5,
             "target": 6,
             "relation_id": "M",
-            "relation_info": "adwawda"
+            "relation_info": "プラトンのアカデメイアで20年間学び、イデア論の影響を受けつつも、普遍を個物から切り離されたものではなく、個物の中に内在するものとして否定した"
         },
         {
             "source": 7,
             "target": 8,
             "relation_id": "N",
-            "relation_info": "adwawda"
-        },
-        {
-            "source": 1,
-            "target": 9,
-            "relation_id": "U",
-            "relation_info": "aaaaa"
+            "relation_info": "デモクリトスの原子論を基礎としながらも、その決定論的な側面を批判し、原子の偶然的な逸れ（クリナーメン）という考えを導入することで、自由意志の余地を作り、また世界が原子から成り立っているという理解によって、迷信や死の恐怖から人を解放しようとした"
         },
         {
             "source": 5,
             "target": 9,
             "relation_id": "U",
-            "relation_info": "iiiii"
+            "relation_info": "プラトンのイデア論の影響を受けて、イデアを『神の内なる永遠の真理』としてキリスト教的に解釈した"
         },
         {
             "source": 6,
             "target": 10,
             "relation_id": "U",
-            "relation_info": "adwawda"
+            "relation_info": "アリストテレスの『形而上学』や『倫理学』の影響を受けて、自然学的・合理的な世界理解をキリスト教の信仰と調和させようとした"
         },
         {
             "source": 12,
             "target": 11,
-            "relation_id": "U",
-            "relation_info": "adwawda"
+            "relation_id": "N",
+            "relation_info": "デカルトの精神と物質の二元論を否定して唯物論的な一元論を主張した"
         },
         {
             "source": 11,
             "target": 12,
-            "relation_id": "U",
-            "relation_info": "adwawda"
+            "relation_id": "N",
+            "relation_info": "ホッブスの唯物論的な考えを否定し、精神と物質の二元論を主張した"
         },
         {
-            "source": 1,
+            "source": 12,
             "target": 13,
             "relation_id": "U",
-            "relation_info": "adwawda"
+            "relation_info": "デカルトの物を証明するのには第一原理が必要という方法論的影響を受けつつ、実際の観察や実験に基づいて法則を見出すことを重視した。また、渦動説を批判的に考えて、ニュートンは万有引力の概念を発展させた。"
         },
         {
             "source": 12,
             "target": 14,
             "relation_id": "N",
-            "relation_info": "adwawda"
+            "relation_info": "デカルトの精神実体と物質実体の二元論を否定し、存在するのは精神と概念のみであり、我々が直接知覚できるのは観念のみであると主張した"
         },
         {
             "source": 14,
             "target": 15,
             "relation_id": "U",
-            "relation_info": "aaaaa"
+            "relation_info": "バークリーの現象主義的な知覚論の影響を受けて、ヒュームはそれを徹底的な経験論的懐疑主義へと昇華させた。"
         },
         {
             "source": 12,
             "target": 15,
             "relation_id": "U",
-            "relation_info": "iiiii"
+            "relation_info": "デカルトの「我思う、ゆえに我あり」という自我概念を批判的に考えて、自我を知覚の束として捉える徹底した経験論を主張した。"
         },
         {
             "source": 11,
             "target": 15,
             "relation_id": "U",
-            "relation_info": "dwdad"
+            "relation_info": "ホッブズの利己的な人間本性論とそれに基づく情念重視の立場から影響を受けて、共感の能力も人間本性の重要な要素として加えたり、また人間の行動の動機は理性ではなく情念であると主張した。"
         },
         {
             "source": 11,
@@ -1121,6 +1115,114 @@
         {
             "name_id": 22,
             "book_id": "bM82EAAAQBAJ"
+        },
+        {
+            "name_id": 23,
+            "book_id": "NBiYQgAACAAJ"
+        },
+        {
+            "name_id": 23,
+            "book_id": "NK6VswEACAAJ"
+        },
+        {
+            "name_id": 24,
+            "book_id": "y5BEEAAAQBAJ"
+        },
+        {
+            "name_id": 24,
+            "book_id": "XFSvcQAACAAJ"
+        },
+        {
+            "name_id": 24,
+            "book_id": "UofXoQEACAAJ"
+        },
+        {
+            "name_id": 25,
+            "book_id": "pa8hTwEACAAJ"
+        },
+        {
+            "name_id": 25,
+            "book_id": "rh8wjgEACAAJ"
+        },
+        {
+            "name_id": 25,
+            "book_id": "XVnTjgEACAAJ"
+        },
+        {
+            "name_id": 25,
+            "book_id": "SWIaMQAACAAJ"
+        },
+        {
+            "name_id": 26,
+            "book_id": "4XAynQEACAAJ"
+        },
+        {
+            "name_id": 26,
+            "book_id": "HqJongEACAAJ"
+        },
+        {
+            "name_id": 27,
+            "book_id": "iZoJAQAAMAAJ"
+        },
+        {
+            "name_id": 27,
+            "book_id": "QKcZAQAAMAAJ"
+        },
+        {
+            "name_id": 27,
+            "book_id": "zKkdAQAAMAAJ"
+        },
+        {
+            "name_id": 27,
+            "book_id": "m3c5bwAACAAJ"
+        },
+        {
+            "name_id": 28,
+            "book_id": "Vz6KNQEACAAJ"
+        },
+        {
+            "name_id": 28,
+            "book_id": "I7DZDwAAQBAJ"
+        },
+        {
+            "name_id": 28,
+            "book_id": "hi-HPgAACAAJ"
+        },
+        {
+            "name_id": 28,
+            "book_id": "8DKjbwAACAAJ"
+        },
+        {
+            "name_id": 29,
+            "book_id": "rSJ_QgAACAAJ"
+        },
+        {
+            "name_id": 29,
+            "book_id": "5bOHPgAACAAJ"
+        },
+        {
+            "name_id": 29,
+            "book_id": "uEaWGAAACAAJ"
+        },
+        {
+            "name_id": 29,
+            "book_id": "ZZ-KPgAACAAJ"
+        },
+        {
+            "name_id": 30,
+            "book_id": "ddtmQgAACAAJ"
+        },
+        {
+            "name_id": 30,
+            "book_id": "wqcNngEACAAJ"
+        },
+        {
+            "name_id": 30,
+            "book_id": "TWEzEQAAQBAJ"
+        },
+        {
+            "name_id": 30,
+            "book_id": "06p5QgAACAAJ"
         }
     ]
 }
