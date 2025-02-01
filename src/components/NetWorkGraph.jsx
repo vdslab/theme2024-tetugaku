@@ -109,8 +109,8 @@ function NetworkGraph({
 
       // ノードを中心へ移動
       const toCenter = d3.zoomIdentity
-        .translate(250 - 2 * x, 250 - 2 * y - 50)
-        .scale(2);
+        .translate(250 - 1.6 * x, 290 - 1.6 * y - 50)
+        .scale(1.6);
 
       // プラトンの初期座標値はここで取得
       // console.log(x);
@@ -218,12 +218,12 @@ function NetworkGraph({
         d3
           .forceLink(data.links)
           .id((d) => d.id)
-          .distance(80)
+          .distance(90)
       )
       .force("charge", d3.forceManyBody().strength(-100))
       .force("center", d3.forceCenter(250, 250))
       .force("x", d3.forceX(250).strength(0.01))
-      .force("y", d3.forceY(250).strength(0.01));
+      .force("y", d3.forceY(250).strength(0.005));
 
     // シミュレーション
     simulation.on("tick", () => {
@@ -299,8 +299,8 @@ function NetworkGraph({
       const x = selectedNode.x;
       const y = selectedNode.y;
       const toCenter = d3.zoomIdentity
-        .translate(250 - 2 * x, 250 - 2 * y - 50)
-        .scale(2);
+        .translate(250 - 1.6 * x, 290 - 1.6 * y - 50)
+        .scale(1.6);
       d3.select(svgRef.current)
         .transition()
         .duration(750)
@@ -311,7 +311,6 @@ function NetworkGraph({
     }
   }, [selectedNodeId, data]);
 
-  // selectedGroupIdを持つノードの中心座標(平均)を計算して移動
   useEffect(() => {
     if (!data || !selectedGroupId) return;
 
@@ -325,21 +324,45 @@ function NetworkGraph({
     const avgY = d3.mean(groupNodes, (d) => d.y);
 
     // 重心に向けてズーム
-    const toCenter = d3.zoomIdentity.translate(250 - avgX, 250 - avgY).scale(1);
+    let centerX = selectedGroupId === 100 ? 315 : 250;
+    let centerY = selectedGroupId === 100 ? 355 : 250;    
+    let sscale = selectedGroupId === 100 ? 0.53 : 1;
+    const toCenter = d3.zoomIdentity.translate(centerX - avgX, centerY - avgY).scale(sscale);
 
     d3.select(svgRef.current)
       .transition()
       .duration(750)
       .call(zoomInstance.current.transform, toCenter);
+  
+    nodeRef.current
+      .transition()
+      .duration(300)
+      .attr("fill-opacity", (nodeData) => {
+        // group が selectedGroupId と一致するノードだけ濃く、その他は薄く
+        return nodeData.group === selectedGroupId ? 1 : 0.15;
+      });
+  
+    linkRef.current
+      .transition()
+      .duration(300)
+      .attr("stroke-opacity", 0.15)
+      .each((linkData) => {
+
+        d3.select(`#arrow-${linkData.index} path`)
+          .transition()
+          .duration(300)
+          .attr("opacity", 0.15);
+      });
+  
   }, [selectedGroupId, data]);
 
   // プラトンの座標を初期値として登録
   useEffect(() => {
-    const x = 306.6817111535429;
-    const y = 196.75920984957799;
+    const x = 399.14718014032775;
+    const y = 144.0531104079058;
     const toCenter = d3.zoomIdentity
-      .translate(250 - 2 * x, 250 - 2 * y - 50)
-      .scale(2);
+      .translate(250 - 1.6 * x, 290 - 1.6 * y - 50)
+      .scale(1.6);
     d3.select(svgRef.current)
       .transition()
       .duration(750)

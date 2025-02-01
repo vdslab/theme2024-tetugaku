@@ -76,9 +76,9 @@ function SearchAndFilter({
 
   // 関係性のオプション
   const modeOptions = [
-    { value: "U", label: "弁証", fullLabel: "弁証法的関係" },
-    { value: "A", label: "肯定", fullLabel: "肯定的関係" },
-    { value: "N", label: "批判", fullLabel: "批判的関係" },
+    { value: "U", label: "弁証", fullLabel: "弁証法的影響" },
+    { value: "A", label: "肯定", fullLabel: "肯定的影響" },
+    { value: "N", label: "批判", fullLabel: "批判的影響" },
     { value: "M", label: "師弟", fullLabel: "師弟関係" },
   ];
 
@@ -281,7 +281,7 @@ function SearchAndFilter({
         options={modeOptions}
         value={selectedModes}
         onChange={handleModeChange}
-        placeholder="関係性を選んでください"
+        placeholder=" 影響・関係性を選んでください"
         isMulti
         closeMenuOnSelect={false}
         hideSelectedOptions={false}
