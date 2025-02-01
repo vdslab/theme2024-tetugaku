@@ -325,7 +325,9 @@ function NetworkGraph({
     const avgY = d3.mean(groupNodes, (d) => d.y);
 
     // 重心に向けてズーム
-    const toCenter = d3.zoomIdentity.translate(250 - avgX, 250 - avgY).scale(1);
+    let centerX = selectedGroupId === 100 ? 315 : 250;
+    let sscale = selectedGroupId === 100 ? 0.6 : 1;
+    const toCenter = d3.zoomIdentity.translate(centerX - avgX, 250 - avgY).scale(sscale);
 
     d3.select(svgRef.current)
       .transition()
