@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Select, { components } from "react-select";
 import "./SearchAndFilter.css";
-import { RedSwitch, BlueSwitch, GreenSwitch, OrangeSwitch } from "./SwitchColor";
+import {
+  RedSwitch,
+  BlueSwitch,
+  GreenSwitch,
+  OrangeSwitch,
+} from "./SwitchColor";
 import randomIcon from "./images/ei-random.svg";
 
 function SearchAndFilter({
@@ -128,7 +133,7 @@ function SearchAndFilter({
     // randomで30人から1人を選ぶ
     console.log(getRandomInt(30));
     selectNode(getRandomInt(30));
-  }
+  };
 
   // 思想家＆グループ用のセレクトスタイル（通常のもの）
   const customStyles = {
@@ -149,13 +154,17 @@ function SearchAndFilter({
   // 透明度を追加する為、rgba表記に修正
   const getOptionColor = (value, opacity = 0.8) => {
     switch (value) {
-      case "U": return `rgba(208, 96, 152, ${opacity})`;  // 弁証
-      case "A": return `rgba(91, 67, 255, ${opacity})`;   // 肯定
-      case "N": return `rgba(217, 128, 80, ${opacity})`;  // 批判
-      case "M": return `rgba(130, 188, 138, ${opacity})`; // 師弟
+      case "U":
+        return `rgba(208, 96, 152, ${opacity})`; // 弁証
+      case "A":
+        return `rgba(91, 67, 255, ${opacity})`; // 肯定
+      case "N":
+        return `rgba(217, 128, 80, ${opacity})`; // 批判
+      case "M":
+        return `rgba(130, 188, 138, ${opacity})`; // 師弟
     }
   };
-  
+
   const customStyles2 = {
     container: (base) => ({
       ...base,
@@ -188,7 +197,7 @@ function SearchAndFilter({
       ...base,
       margin: "1.5px 3px",
       backgroundColor: getOptionColor(data.value), // 背景色
-      
+
       borderRadius: "10px",
     }),
     multiValueLabel: (base, { data }) => ({
@@ -202,29 +211,28 @@ function SearchAndFilter({
       borderRadius: "20px",
       fontSize: "6px", // ✖ボタンを小さく
       padding: "1px", // パディングを小さくして、ボタンを縮小
-      
+
       ":hover": {
         backgroundColor: getOptionColor(data.value), // ホバー時の背景色
         color: "black",
       },
     }),
-  
+
     option: (base, { isFocused, isSelected }) => ({
       ...base,
-    
+
       // 選択されているときだけ背景を透明に
       backgroundColor: isSelected ? "transparent" : base.backgroundColor,
-    
+
       // 文字色は常に React-Select のデフォルトを使う
       color: "black",
-    
+
       // マウスダウン時の反転も透明にしたい場合
       ":active": {
-       backgroundColor: "transparent",
+        backgroundColor: "transparent",
       },
     }),
   };
-  
 
   // 選択された思想家のIDを反映
   useEffect(() => {
@@ -244,12 +252,11 @@ function SearchAndFilter({
 
   return (
     <div className="select-container">
-
       <button onClick={handleRandomSelect} className="random-button">
         <img src={randomIcon} alt="ランダム" className="random-icon" />
         ランダム
       </button>
-      
+
       {/* 思想家を選択 */}
       <Select
         key={key}
@@ -264,7 +271,6 @@ function SearchAndFilter({
         isDisabled={!renderComplete}
       />
 
-      
       {/* グループを選択 */}
       <Select
         options={groupOptions}
