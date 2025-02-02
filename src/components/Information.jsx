@@ -36,7 +36,7 @@ function Information({ processed_data, nodeId }) {
   if (!nodeInfo) {
     return (
       <div className="information-container">
-        <div className="information-header">Information</div>
+        <div className="information-header">解説</div>
         <div className="information-content">
           <div className="p-4">ノードを選択してください</div>
         </div>
