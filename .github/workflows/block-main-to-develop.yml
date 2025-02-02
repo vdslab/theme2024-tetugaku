@@ -1,0 +1,17 @@
+name: Prevent Main to Develop Merge
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  prevent-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if the source branch is main
+        run: |
+          if [[ "${{ github.head_ref }}" == "main" ]]; then
+            echo "❌ Error: You cannot merge 'main' into 'develop'."
+            exit 1
+          fi
