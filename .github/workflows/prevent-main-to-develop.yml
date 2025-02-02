@@ -1,13 +1,14 @@
 name: prevent-main-to-develop
 
 on:
-  pull_request:
+  pull_request: # すべての PR を監視するが、チェックは `develop` だけに適用する
     branches:
-      - develop # develop への PR を監視
+      - develop
 
 jobs:
   prevent-main-to-develop:
     runs-on: ubuntu-latest
+    if: github.base_ref == 'develop' # main に対する PR の場合のみ実行
     steps:
       - name: Check if the source branch is main
         run: |
