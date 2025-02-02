@@ -3,10 +3,10 @@ name: prevent-main-to-develop
 on:
   pull_request:
     branches:
-      - develop  # develop への PR を監視
+      - develop # develop への PR を監視
 
 jobs:
-  prevent-merge:
+  prevent-main-to-develop:
     runs-on: ubuntu-latest
     steps:
       - name: Check if the source branch is main
@@ -15,4 +15,3 @@ jobs:
             echo "❌ Error: You cannot merge 'main' into 'develop'."
             exit 1
           fi
-
