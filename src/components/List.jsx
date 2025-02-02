@@ -32,6 +32,7 @@ function List({ processed_data, nodeId }) {
   return (
     <div>
       <div className="information-header">キーワードと詳細ooooooo</div>
+
       <div className="list-content">
         {/* キーワード一覧 */}
         <h2 className="text-xl font-bold mb-4">キーワード</h2>
