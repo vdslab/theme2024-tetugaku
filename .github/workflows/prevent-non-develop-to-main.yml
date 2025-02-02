@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check if the source branch is not develop
+        if: github.base_ref == 'main'  # main に対する PR の場合のみ実行
         run: |
           if [[ "${{ github.event.pull_request.head.ref }}" != "develop" ]]; then
             echo "❌ Error: Only 'develop' can be merged into 'main'."
