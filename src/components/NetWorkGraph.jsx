@@ -40,7 +40,7 @@ function NetworkGraph({
       d3.select(svgRef.current)
         .select("g.main-group")
         .attr("transform", event.transform);
-    })
+    }),
   );
 
   // ノードクリックでノードとエッジをハイライト表示
@@ -72,7 +72,7 @@ function NetworkGraph({
               ? isHighlighted2
                 ? 1
                 : 0.15
-              : 0
+              : 0,
           );
 
         if (isEdgeHighlighted) {
@@ -88,7 +88,7 @@ function NetworkGraph({
       .transition()
       .duration(300)
       .attr("fill-opacity", (d) =>
-        clickedNode.id === d.id || highlightedNodeIds.has(d.id) ? 1 : 0.15
+        clickedNode.id === d.id || highlightedNodeIds.has(d.id) ? 1 : 0.15,
       );
   };
 
@@ -219,7 +219,7 @@ function NetworkGraph({
         d3
           .forceLink(data.links)
           .id((d) => d.id)
-          .distance(100)
+          .distance(100),
       )
       .force("charge", d3.forceManyBody().strength(-100))
       .force("center", d3.forceCenter(250, 250))
@@ -317,7 +317,7 @@ function NetworkGraph({
 
     // selectedGroupIdと一致するノードを抽出
     const groupNodes = data.nodes.filter(
-      (node) => node.group === selectedGroupId
+      (node) => node.group === selectedGroupId,
     );
 
     // ノード群の x, y の平均(重心)を計算

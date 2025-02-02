@@ -9,13 +9,13 @@ function Information({ processed_data, nodeId }) {
     if (!processed_data || !nodeId) return;
 
     const selectedNode = processed_data.nodes?.find(
-      (node) => node.id === nodeId
+      (node) => node.id === nodeId,
     );
 
     if (selectedNode && processed_data.names) {
       setNodeInfo(selectedNode);
       const nameInfo = processed_data.names.find(
-        (name) => Number(name.name_id) === Number(nodeId)
+        (name) => Number(name.name_id) === Number(nodeId),
       );
       if (nameInfo) {
         setPhilosopherName(nameInfo.name);

@@ -97,7 +97,11 @@ const BookShelf = ({ processed_data, nodeId }) => {
   }, [nodeId, processed_data]);
 
   if (loading) {
-    return <div className="loading-message">読み込み中...</div>;
+    return (
+      <div className="book-shelf-container">
+        <div className="loading-message">読み込み中...</div>
+      </div>
+    );
   }
 
   if (error) {
