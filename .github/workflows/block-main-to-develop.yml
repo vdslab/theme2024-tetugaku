@@ -1,9 +1,9 @@
-name: Prevent Main to Develop Merge
+name: prevent-main-to-develop
 
 on:
   pull_request:
     branches:
-      - develop
+      - develop  # develop への PR を監視
 
 jobs:
   prevent-merge:
@@ -11,7 +11,8 @@ jobs:
     steps:
       - name: Check if the source branch is main
         run: |
-          if [[ "${{ github.head_ref }}" == "main" ]]; then
+          if [[ "${{ github.event.pull_request.head.ref }}" == "main" ]]; then
             echo "❌ Error: You cannot merge 'main' into 'develop'."
             exit 1
           fi
+
