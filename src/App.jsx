@@ -12,7 +12,7 @@ function App() {
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [renderComplete, setRenderComplete] = useState(null);
 
-  const [highlightNode,setHighlightNode] = useState([]);
+  const [highlightNode, setHighlightNode] = useState([]);
   const [stateM, setStateM] = useState(false);
   const [stateN, setStateN] = useState(false);
   const [stateU, setStateU] = useState(false);
@@ -78,7 +78,7 @@ function App() {
                 />
               </div>
               <div className="list-container">
-                <List 
+                <List
                   processed_data={processed_data}
                   nodeId={clickedNodeId}
                   highlightNode={setHighlightNode}
