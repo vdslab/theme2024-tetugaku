@@ -1,4 +1,9 @@
-import { createRoot } from "react-dom/client";
+import React from "react";
+import ReactDOM from "react-dom/client";
 import AppContainer from "./AppContainer";
 
-createRoot(document.querySelector("#content")).render(<AppContainer />);
+ReactDOM.createRoot(document.querySelector("#root")).render(
+  <React.StrictMode>
+    <AppContainer />
+  </React.StrictMode>
+);
