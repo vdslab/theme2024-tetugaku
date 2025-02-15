@@ -7,6 +7,12 @@ import BookShelf from "./components/BookShelf";
 import SelectNode from "./components/SelectNode";
 import List from "./components/List";
 
+// css
+import "../../styles/body-styles.css";
+import "../../styles/item-styles.css";
+import "../../styles/main-styles.css";
+import "../../styles/font-styles.css";
+
 function App() {
   const [clickedNodeId, setClickedNodeId] = useState(null);
   const [selectedGroupId, setSelectedGroupId] = useState(null);
@@ -59,15 +65,6 @@ function App() {
       <main>
         {/* main-styles.css適用箇所 */}
         <div className="full-container">
-          {/* <div className="select-container"> */}
-          {/* <h1>セレクトボタン</h1> */}
-          {/* <SearchAndFilter
-              processed_data={processed_data}
-              selectNode={handleSetNodeId}
-              selectGroup={handleSetGroupId}
-              renderComplete={renderComplete}
-            /> */}
-          {/* </div> */}
           <div className="item-container">
             {/* item-styles.css適用箇所 */}
             <div className="info-list-container">

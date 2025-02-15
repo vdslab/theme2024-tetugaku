@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "/styles/book-shelf.css";
+import "./BookShelf.css";
 
 const my_api_key = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
 
@@ -16,7 +16,7 @@ const BookShelf = ({ processed_data, nodeId }) => {
       // 選択された著者とその関連著者のチェーンを作成
       const createAuthorChain = () => {
         const selectedAuthor = processed_data.names.find(
-          (e) => e.name_id === nodeId
+          (e) => e.name_id === nodeId,
         );
 
         if (!selectedAuthor) return [];
@@ -45,7 +45,7 @@ const BookShelf = ({ processed_data, nodeId }) => {
         const allBooksData = await Promise.all(
           authorChain.map(async (author) => {
             const authorBooks = processed_data.books.filter(
-              (book) => book.name_id === author.name_id
+              (book) => book.name_id === author.name_id,
             );
 
             if (!authorBooks.length) {
@@ -57,7 +57,7 @@ const BookShelf = ({ processed_data, nodeId }) => {
 
             const bookPromises = authorBooks.map(async (book) => {
               const response = await fetch(
-                `https://www.googleapis.com/books/v1/volumes/${book.book_id}?key=${my_api_key}`
+                `https://www.googleapis.com/books/v1/volumes/${book.book_id}?key=${my_api_key}`,
               );
               if (!response.ok) {
                 throw new Error(`Failed to fetch book: ${book.book_id}`);
@@ -81,7 +81,7 @@ const BookShelf = ({ processed_data, nodeId }) => {
               author: author.name,
               books: formattedBooks,
             };
-          })
+          }),
         );
 
         setBooks(allBooksData);

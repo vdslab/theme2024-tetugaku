@@ -2,7 +2,7 @@ html {
   height: 100%;
 }
 
-body > #content {
+body > #root {
   height: 100%;
 }
 
