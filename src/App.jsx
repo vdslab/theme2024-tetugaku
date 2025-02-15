@@ -9,8 +9,8 @@ import List from "./components/List";
 
 // css
 import "../styles/body-styles.css";
-import "../styles/item-styles.css" ;
-import "../styles/main-styles.css" ;
+import "../styles/item-styles.css";
+import "../styles/main-styles.css";
 import "../styles/font-styles.css";
 
 function App() {
