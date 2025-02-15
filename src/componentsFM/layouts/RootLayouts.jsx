@@ -1,11 +1,9 @@
 import { Outlet } from "react-router";
 
-function AppFM() {
+export default function RootLayouts() {
   return (
-    <div>
+    <>
       <Outlet />
-    </div>
+    </>
   );
 }
-
-export default AppFM;
