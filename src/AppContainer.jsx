@@ -6,7 +6,7 @@ import { routes } from "./Mobile/router/routes.jsx"; // routes.jsをimport
 
 function AppContainer() {
   const [isMobile, setIsMobile] = useState(
-    window.innerWidth / window.innerHeight < 1
+    window.innerWidth / window.innerHeight < 1,
   );
 
   useEffect(() => {
