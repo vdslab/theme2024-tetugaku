@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 
-function AppFM() {
+function App() {
   return (
     <div>
       <Outlet />
@@ -8,4 +8,4 @@ function AppFM() {
   );
 }
 
-export default AppFM;
+export default App;

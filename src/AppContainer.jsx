@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from "./App";
-import AppFM from "./AppFM";
-import { routes } from "./rooterFM/routes.jsx"; // routes.jsをimport
+import App from "./Desktop/App.jsx";
+import AppFM from "./Mobile/App.jsx";
+import { routes } from "./Mobile/router/routes.jsx"; // routes.jsをimport
 
 function AppContainer() {
   const [isMobile, setIsMobile] = useState(
@@ -17,10 +17,10 @@ function AppContainer() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const router = createBrowserRouter(routes); // ルーター作成
+  const routerFM = createBrowserRouter(routes); // モバイル用ルーター作成
 
   return isMobile ? (
-    <RouterProvider router={router}>
+    <RouterProvider router={routerFM}>
       <AppFM />
     </RouterProvider>
   ) : (

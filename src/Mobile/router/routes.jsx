@@ -1,9 +1,9 @@
 import { Navigate } from "react-router-dom";
-import RootLayouts from "../componentsFM/layouts/RootLayouts.jsx";
-import MainLayouts from "../componentsFM/layouts/MainLayouts.jsx";
-import Loading from "../componentsFM/pages/Loading/Loading.jsx";
-import About from "../componentsFM/pages/Main/About.jsx";
-import Home from "../componentsFM/pages/Main/Home.jsx";
+import RootLayouts from "../components/layouts/RootLayouts.jsx";
+import MainLayouts from "../components/layouts/MainLayouts.jsx";
+import Loading from "../components/pages/Loading/Loading.jsx";
+import About from "../components/pages/Main/About.jsx";
+import Home from "../components/pages/Main/Home.jsx";
 
 // ルート定義を簡略化
 const route = (path, element, children = []) => ({ path, element, children });
