@@ -4,11 +4,13 @@ import { Outlet } from "react-router-dom";
 import { Header } from "../organisms/main/Header.jsx";
 import { Footer } from "../organisms/main/Footer.jsx";
 
+import "./MainLayout.css";
+
 export default function MainLayouts() {
   return (
-    <div style={{ border: "2px solid green", padding: "1rem" }}>
+    <div className="main-layout">
       <Header />
-      <main style={{ margin: "1rem 0" }}>
+      <main>
         <Outlet />
       </main>
       <Footer />
