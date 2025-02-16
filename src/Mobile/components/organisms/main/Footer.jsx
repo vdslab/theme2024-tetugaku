@@ -1,10 +1,6 @@
-// organisms/main/Footer.jsx
 import React from "react";
+import "./Footer.css";
 
 export function Footer() {
-  return (
-    <footer style={{ background: "#eee", padding: "1rem", marginTop: "1rem" }}>
-      <p>Footer</p>
-    </footer>
-  );
+  return <footer className="footer-mobile">footer</footer>;
 }

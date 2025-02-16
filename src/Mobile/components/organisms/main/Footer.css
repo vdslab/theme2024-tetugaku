@@ -1,0 +1,6 @@
+.footer-mobile {
+  height: 5vh;
+  background: #eeb9b9;
+  position: relative; /* default(static)だとz-indexが使えない */
+  z-index: 2; /* bottomsheetは1に設定 */
+}

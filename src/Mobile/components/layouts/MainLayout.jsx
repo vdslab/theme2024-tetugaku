@@ -10,7 +10,7 @@ export default function MainLayouts() {
   return (
     <div className="main-layout">
       <Header />
-      <main>
+      <main className="main-mobile">
         <Outlet />
       </main>
       <Footer />
