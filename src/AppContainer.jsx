@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./Desktop/App.jsx";
 import AppFM from "./Mobile/App.jsx";
-import { routes } from "./Mobile/router/routes.jsx"; // routes.jsをimport
+import { routes } from "@m/router/routes.jsx";
 
 function AppContainer() {
   const [isMobile, setIsMobile] = useState(
-    window.innerWidth / window.innerHeight < 1,
+    window.innerWidth / window.innerHeight < 1
   );
 
   useEffect(() => {

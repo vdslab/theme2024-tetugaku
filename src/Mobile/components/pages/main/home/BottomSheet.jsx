@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useGesture } from "@use-gesture/react";
-import Information from "./BottomSheet/Information.jsx";
+import Information from "./bottom-sheet/Information";
 import "./BottomSheet.css";
 
 const BottomSheetPage = () => {
@@ -48,9 +48,8 @@ const BottomSheetPage = () => {
       <div className="drag-handle">
         <div className="handle" />
       </div>
-      <>
-        <Information />
-      </>
+
+      <Information />
     </div>
   );
 };
