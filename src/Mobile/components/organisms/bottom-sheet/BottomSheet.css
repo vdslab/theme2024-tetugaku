@@ -3,7 +3,7 @@
 .bottom-sheet-container {
   /* transformは BottomSheet.jsx内で動的に定義 */
   z-index: 1; /* footerを2で定義 */
-  height: 90vh;
+  height: 100vh;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -20,7 +20,7 @@
 
 /* ドラッグハンドル部分 */
 .drag-handle {
-  height: 60px;
+  height: 3vh;
   display: flex;
   align-items: center;
   justify-content: center;
