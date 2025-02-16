@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useGesture } from "@use-gesture/react";
-import Information from "./bottom-sheet/Information";
+import Information from "../information/Information";
 import "./BottomSheet.css";
 
-const BottomSheetPage = () => {
+const BottomSheetPage = ({ data, nodeId }) => {
   // openVh: シートが開いたときの上限（画面上部からの位置、0 なら完全に上まで）
   // closedVh: シートが閉じたときの下限（画面上部からの位置）
   const openVh = 10; // 必要に応じて変更（例：0なら完全に開く）
@@ -49,7 +49,7 @@ const BottomSheetPage = () => {
         <div className="handle" />
       </div>
 
-      <Information />
+      <Information data={data} nodeId={nodeId} />
     </div>
   );
 };
