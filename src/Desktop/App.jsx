@@ -41,7 +41,7 @@ function App() {
   return (
     <div className="wrapper">
       {/* wrapper-styles.css適用箇所 */}
-      <header>
+      <header className="header-desktop">
         <div className="header-title">
           <h1>哲学思想ネットワーク</h1>
         </div>
@@ -62,7 +62,7 @@ function App() {
           />
         </div>
       </header>
-      <main>
+      <main className="main-desktop">
         {/* main-styles.css適用箇所 */}
         <div className="full-container">
           <div className="item-container">

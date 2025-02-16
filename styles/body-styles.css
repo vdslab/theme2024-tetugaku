@@ -27,7 +27,7 @@ body {
 }
 
 /* wrappaer内部 */
-header {
+.header-desktop {
   height: 7%;
   width: 100%;
 
@@ -42,7 +42,7 @@ header {
   box-sizing: border-box;
 }
 
-main {
+.main-desktop {
   height: 93%;
 }
 
