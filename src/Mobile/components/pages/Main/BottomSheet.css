@@ -1,0 +1,41 @@
+/* ボトムシートのコンテナ：画面全体の高さをカバー */
+
+.bottom-sheet-container {
+  /* transformは BottomSheet.jsx内で動的に定義 */
+  z-index: 1; /* footerを2で定義 */
+  height: 90vh;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  box-shadow: 0px -3px 10px rgba(0, 0, 0, 0.2);
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  cursor: grab;
+}
+
+/* ドラッグハンドル部分 */
+.drag-handle {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  border-bottom: 1px solid #ccc;
+}
+
+.handle {
+  width: 50px;
+  height: 6px;
+  background: #ccc;
+  border-radius: 3px;
+}
+
+/* シート内のコンテンツエリア */
+.sheet-content {
+  padding: 1rem;
+}
