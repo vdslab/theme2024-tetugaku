@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import "./Information.css";
 
 export default function InformationCard({ data, nodeId }) {
   const [nodeInfo, setNodeInfo] = useState(null);
   const [philosopherName, setPhilosopherName] = useState("");
 
+  nodeId = 21;
   useEffect(() => {
     if (!data || !nodeId) return;
 
@@ -31,13 +33,11 @@ export default function InformationCard({ data, nodeId }) {
   };
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">{philosopherName}</h2>
-      <div className="space-y-4">
-        <p className="text-gray-700">
-          {!data || !nodeInfo
-            ? "ノードを選択してください"
-            : formatText(nodeInfo.information)}
-        </p>
+      <h1 className="information-name-fm">{philosopherName}</h1>
+      <div className="information-text-fm">
+        {!data || !nodeInfo
+          ? "ノードを選択してください"
+          : formatText(nodeInfo.information)}
       </div>
     </div>
   );
